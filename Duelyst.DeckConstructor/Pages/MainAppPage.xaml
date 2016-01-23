@@ -1,0 +1,89 @@
+﻿<Page x:Class="Duelyst.DeckConstructor.Pages.MainAppPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Duelyst.DeckConstructor.Pages"
+      xmlns:paralaxBinary="clr-namespace:Duelyst.DeckConstructor.ParalaxBinary"
+      xmlns:deckConstructor="clr-namespace:Duelyst.DeckConstructor"
+      mc:Ignorable="d" 
+      DataContext="{Binding Source={StaticResource Locator}, Path=MainPage}"
+      Title="MainAppPage" 
+      SizeChanged="MainAppPage_OnSizeChanged"
+      HorizontalAlignment="Stretch" 
+      VerticalAlignment="Stretch"
+      MinHeight="300" MinWidth="300" MouseMove="MainAppPage_OnMouseMove">
+    <Grid ClipToBounds="True">
+        <Canvas Name="BackgoundSource" ZIndex="0">
+            <Image Stretch="UniformToFill" Height="{Binding PageHeight, Mode=OneWay}" Width="{Binding PageWidth, Mode=OneWay}" Source="SceneMountains/scene_mountains_background.jpg"/>
+        </Canvas>
+        <Canvas Name="MiddleImageSourceIcepeaks" ZIndex="1">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="{Binding ScaleCenterX}" 
+                                    CenterY="{Binding ScaleCenterY}"
+                                    ScaleX="{Binding XScaleMiddle}" 
+                                    ScaleY="{Binding YScaleMiddle}"/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <Image HorizontalAlignment="Stretch" VerticalAlignment="Center" Stretch="Uniform"
+                   Height="{Binding PageHeightExtended, Mode=OneWay}" 
+                   Width="{Binding PageWidth, Mode=OneWay}" 
+                   Source="SceneMountains/scene_mountains_middleground_001.png"/>
+        </Canvas>
+        <Canvas Name="MiddleImageSource" ZIndex="2">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="{Binding ScaleCenterX}" 
+                                    CenterY="{Binding ScaleCenterY}"
+                                    ScaleX="{Binding XScaleMiddle}" 
+                                    ScaleY="{Binding YScaleMiddle}"/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <Image HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Stretch="Uniform"
+                   Height="{Binding PageHeight, Mode=OneWay}" 
+                   Width="{Binding PageWidth, Mode=OneWay}" 
+                   Source="SceneMountains/scene_mountains_middleground_002.png"/>
+        </Canvas>
+        <Canvas Name="ForntImageSource" ZIndex="3">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="{Binding ScaleCenterX}" 
+                                    CenterY="{Binding ScaleCenterY}"
+                                    ScaleX="{Binding XScaleFront}" 
+                                    ScaleY="{Binding YScaleFront}"/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <Image HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                   Height="{Binding PageHeight, Mode=OneWay}" 
+                   Width="{Binding PageWidth, Mode=OneWay}" 
+                   Source="SceneMountains/scene_mountains_foreground.png"/>
+        </Canvas>
+        <Canvas Name="UpperCaveImg" ZIndex="3">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="{Binding ScaleCenterX}" 
+                                    CenterY="{Binding ScaleCenterY}"
+                                    ScaleX="{Binding XScaleFront}" 
+                                    ScaleY="{Binding YScaleFront}"/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <Image HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None"
+                   Height="{Binding PageHeightExtended, Mode=OneWay}" 
+                   Width="{Binding PageWidth, Mode=OneWay}" 
+                   Source="SceneMountains/scene_mountains_stone_001.png"/>
+        </Canvas>
+        <!--Main UI canvas content-->
+        <Canvas ZIndex="4">
+            <TabControl Height="{Binding PageHeight}" Width="{Binding PageWidth}" SelectedIndex="{Binding SelectedMenuTab}" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TabItem>
+                    <Frame NavigationUIVisibility="Hidden" Source="MainMenuPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame NavigationUIVisibility="Hidden"  Source="DeckConstructorSpellBook.xaml"/>
+                </TabItem>
+            </TabControl>
+        </Canvas>
+    </Grid>
+</Page>
