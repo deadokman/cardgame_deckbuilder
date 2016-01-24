@@ -98,6 +98,9 @@
     <Compile Include="ForegroudTemple.xaml.cs">
       <DependentUpon>ForegroudTemple.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\CardPresenterPage.xaml.cs">
+      <DependentUpon>CardPresenterPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\DeckConstructorSpellBook.xaml.cs">
       <DependentUpon>DeckConstructorSpellBook.xaml</DependentUpon>
     </Compile>
@@ -114,6 +117,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="VectorCalcs\VectorMath.cs" />
     <Compile Include="ViewModel\ChartBarCardInfo.cs" />
+    <Compile Include="ViewModel\Communication\CardDisplayMessage.cs" />
     <Compile Include="ViewModel\Communication\CommEventType.cs" />
     <Compile Include="ViewModel\Communication\NavigationMessage.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardGeneral.cs" />
@@ -141,6 +145,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\CardPresenterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DeckConstructorSpellBook.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

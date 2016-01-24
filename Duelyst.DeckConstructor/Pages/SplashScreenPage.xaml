@@ -9,6 +9,6 @@
       Title="SplashScreenPage">
 
     <Grid Background="DarkBlue" Opacity="50">
-        <TextBox Text="SPLAH" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+        <TextBox Text="SPLASH" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
     </Grid>
 </Page>
