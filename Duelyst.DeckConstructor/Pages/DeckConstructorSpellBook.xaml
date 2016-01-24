@@ -3,12 +3,219 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:wpftoolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
       xmlns:local="clr-namespace:Duelyst.DeckConstructor.Pages"
+      xmlns:sparrow="http://sparrowtoolkit.codeplex.com/wpf"
+      xmlns:metroChart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
-      Title="DeckConstructorSpellBook">
-
-    <Grid>
-        <TextBlock FontSize="25" Foreground="White" Text="КОНСТРУКТОР КОЛОДЫ" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="DeckConstructorSpellBook" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+      DataContext="{Binding Source={StaticResource Locator}, Path=DeckConstructorViewModel}" 
+      SizeChanged="DeckConstructorSpellBook_OnSizeChanged">
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BackButtonStyle" TargetType="Image">
+                <Setter Property="Source" Value="UI/button_back@2x.png"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseCaptured" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <TranslateTransform X="25"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect ShadowDepth="0" Color="Aqua"  Opacity="19" BlurRadius="14"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="BaseChartStyle" TargetType="metroChart:ChartBase">
+                <Setter Property="Margin" Value="0 0 10 10"/>
+                <Setter Property="FontSize" Value="{Binding Path=SelectedFontSize}" />
+            </Style>
+            <Style x:Key="ChartStyleMinimalSize" TargetType="metroChart:ChartBase" BasedOn="{StaticResource BaseChartStyle}">
+                <Setter Property="Width" Value="425"/>
+                <Setter Property="Height" Value="400"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid ClipToBounds="True">
+        <Canvas ZIndex="0">
+            <Image HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Stretch="UniformToFill"
+                   Height="{Binding PageHeight, Mode=OneWay}" 
+                   Width="{Binding PageWidth, Mode=OneWay}" 
+                   Source="UI/FRAME_CARD_CONSTRUCTOR.png">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <!--<RotateTransform Angle="90"/>-->
+                        <TranslateTransform  Y="-50"/>
+                        <ScaleTransform ScaleY="1.2" ScaleX="1.2"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </Canvas>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".75*"/>
+                <ColumnDefinition Width=".25*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".1*"/>
+                    <RowDefinition Height=".9*"/>
+                    <RowDefinition Height=".1*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".1*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="0">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Image Style="{Binding Source={StaticResource BackButtonStyle}}"/>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Grid Grid.Column="1">
+                        <ToolBar ItemsSource="{Binding Generals}" ToolBarTray.IsLocked="True" OverflowMode="Never" Background="Transparent">
+                            <ToolBar.ItemTemplate>
+                                <DataTemplate>
+                                    <ToggleButton IsChecked="{Binding IsSelected, Mode=TwoWay}" VerticalAlignment="Center">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate>
+                                                <Border IsEnabled="{Binding IsAvailebleToSelect}" BorderBrush="{x:Null}" Height="25">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <ImageBrush Stretch="UniformToFill" ImageSource="UI/General_unselected_State.png"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <DataTrigger  Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                    <Setter Property="Effect">
+                                                                        <Setter.Value>
+                                                                            <DropShadowEffect Direction="0" Color="White" BlurRadius="20" Opacity="1"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </DataTrigger>
+                                                                <DataTrigger  Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                    <Setter Property="Background">
+                                                                        <Setter.Value>
+                                                                            <ImageBrush Stretch="UniformToFill"  ImageSource="UI/GeneralSelectedState.png"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock Margin="5,5,5,5" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                                               TextAlignment="Left"  Text="{Binding GeneralName}" FontFamily="Segoe WP SemiLight">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Effect">
+                                                                            <Setter.Value>
+                                                                                <DropShadowEffect Direction="0" Color="White" BlurRadius="20" Opacity="1"/>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+                                </DataTemplate>
+                            </ToolBar.ItemTemplate>
+                        </ToolBar>
+                    </Grid>
+                </Grid>
+                <Frame />
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.Background>
+                    <ImageBrush Stretch="UniformToFill" ImageSource="UI/BuildedSquadList.png" />
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".1*"/>
+                    <RowDefinition Height=".4*"/>
+                    <RowDefinition Height=".1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height=".1*"/>
+                </Grid.RowDefinitions>
+                <TextBox Margin="1,1,1,1" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
+                <!--<sparrow:SparrowChart Margin="5,5,5,5" BorderThickness="0"  BorderBrush="Black" Grid.Row="1" 
+                                      HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Foreground="White" >
+                    <sparrow:SparrowChart.XAxis>
+                        <sparrow:LinearXAxis Visibility="Collapsed"/>
+                    </sparrow:SparrowChart.XAxis>
+                    <sparrow:SparrowChart.YAxis>
+                        <sparrow:LinearYAxis Visibility="Collapsed"/>
+                    </sparrow:SparrowChart.YAxis>
+                    <sparrow:ColumnSeries Fill="DeepSkyBlue"  StrokeThickness="0">
+                        <sparrow:ColumnSeries.Effect>
+                            <DropShadowEffect ShadowDepth="0" Color="DeepSkyBlue" Opacity="19" BlurRadius="1"/>
+                        </sparrow:ColumnSeries.Effect>
+                        <sparrow:ColumnSeries.Points>
+                            <sparrow:DoublePoint Data="0" Value="1"/>
+                            <sparrow:DoublePoint Data="1" Value="2"/>
+                            <sparrow:DoublePoint Data="2" Value="3"/>
+                            <sparrow:DoublePoint Data="3" Value="4"/>
+                            <sparrow:DoublePoint Data="4" Value="5"/>
+                            <sparrow:DoublePoint Data="5" Value="6"/>
+                            <sparrow:DoublePoint Data="6" Value="7"/>
+                            <sparrow:DoublePoint Data="7" Value="8"/>
+                            <sparrow:DoublePoint Data="8" Value="9"/>
+                            <sparrow:DoublePoint Data="9" Value="10"/>
+                            <sparrow:DoublePoint Data="10" Value="11"/>
+                        </sparrow:ColumnSeries.Points>
+                    </sparrow:ColumnSeries>
+                </sparrow:SparrowChart>-->
+                <!--<metroChart:StackedBar100Chart Style="{StaticResource ChartStyleMinimalSize}"  Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                ChartTitleVisibility="Collapsed" ChartLegendVisibility="Collapsed" Foreground="DodgerBlue"  Background="Transparent">
+                    <metroChart:StackedBar100Chart.Series >
+                        <metroChart:ChartSeries
+                            SeriesTitle="dep"
+                        DisplayMember="ManaCost"
+                        ValueMember="Count"
+                        ItemsSource="{Binding ChartCardInfoCollection}">
+                        </metroChart:ChartSeries>
+                    </metroChart:StackedBar100Chart.Series>
+                </metroChart:StackedBar100Chart>-->
+                <DockPanel Grid.Row="2"></DockPanel>
+                 <!--Лист с картами по подготовленному шаблоу-->
+                <ListView ItemsSource="{Binding DeckCardItems}" Background="Transparent" Grid.Row="3">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ClipToBounds="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".2*" />
+                                    <ColumnDefinition Width=".8*" />
+                                </Grid.ColumnDefinitions>
+                                <Border  Grid.Column="0"  BorderBrush="{x:Null}" Height="35">
+                                    <Border.Background>
+                                        <ImageBrush Stretch="Uniform"  ImageSource="UI/icon_mana-hd.png"></ImageBrush>
+                                    </Border.Background>
+                                    <TextBlock Height="50" FontSize="22" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding ManaCost}"/>
+                                </Border>
+                                <TextBlock Height="25" FontWeight="Bold" FontSize="17" TextAlignment="Left" Text="{Binding Name}" Grid.Column="1"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <DockPanel Grid.Row="4">
+                    <Button />
+                </DockPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

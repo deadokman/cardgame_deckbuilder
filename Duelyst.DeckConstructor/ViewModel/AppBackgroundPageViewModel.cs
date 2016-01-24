@@ -4,7 +4,7 @@ using GalaSoft.MvvmLight.Messaging;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
-    public class MainPageViewModel : ResizableViewModelBase
+    public class AppBackgroundPageViewModel : ResizableViewModelBase
     {
         private double _pageHeightFF;
         private double _pageWidthFF;
@@ -22,8 +22,9 @@ namespace Duelyst.DeckConstructor.ViewModel
         private double _yScaleMiddle;
         private double _pageHeightExtended;
         private int _selectedMenuTab;
+        private bool _isBlurScene;
 
-        public MainPageViewModel()
+        public AppBackgroundPageViewModel()
         {
             ScaleCenterX = 0;
             ScaleCenterY = 0;
@@ -39,8 +40,12 @@ namespace Duelyst.DeckConstructor.ViewModel
         {
             switch (navMess.CommMsgType)
             {
-                case CommEventType.NewDeck: SelectedMenuTab = 1; break;
-                case CommEventType.MainMenu: SelectedMenuTab = 0; break;
+                case CommEventType.NewDeck: SelectedMenuTab = 1;
+                    IsBlurScene = true;
+                    break;
+                case CommEventType.MainMenu: SelectedMenuTab = 0;
+                    IsBlurScene = false;
+                    break;
                 default: break;;
             }
 
@@ -62,6 +67,16 @@ namespace Duelyst.DeckConstructor.ViewModel
             YScaleMiddle = scaleFactorMiddle;
             //Изменить положение центра точки скейла
             ScaleCenterX = newPosx;
+        }
+
+        public bool IsBlurScene
+        {
+            get { return _isBlurScene; }
+            set
+            {
+                _isBlurScene = value; 
+                RaisePropertyChanged(() => IsBlurScene);
+            }
         }
 
         public int SelectedMenuTab

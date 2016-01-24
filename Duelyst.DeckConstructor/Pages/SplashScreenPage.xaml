@@ -8,7 +8,7 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="SplashScreenPage">
 
-    <Grid>
+    <Grid Background="DarkBlue" Opacity="50">
         <TextBox Text="SPLAH" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
     </Grid>
 </Page>

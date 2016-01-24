@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="De.TorstenMandelkow.MetroChart, Version=0.9.5818.20693, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ModernUICharts.WPF.Beta.0.9.1\lib\De.TorstenMandelkow.MetroChart.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
       <Private>True</Private>
@@ -107,12 +111,17 @@
       <DependentUpon>SplashScreenPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ParalaxBinary\ParallaxConverter .cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="VectorCalcs\VectorMath.cs" />
+    <Compile Include="ViewModel\ChartBarCardInfo.cs" />
     <Compile Include="ViewModel\Communication\CommEventType.cs" />
     <Compile Include="ViewModel\Communication\NavigationMessage.cs" />
+    <Compile Include="ViewModel\DeckCardItem\CardGeneral.cs" />
+    <Compile Include="ViewModel\DeckCardItem\DeckCardItemViewModel.cs" />
+    <Compile Include="ViewModel\DeckConstructorViewModel.cs" />
     <Compile Include="ViewModel\Ifaces\IResizeableViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
-    <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="ViewModel\AppBackgroundPageViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ResizableViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -208,6 +217,22 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pages\UI\LOGO_CC.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\UI\FRAME_CARD_CONSTRUCTOR.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\UI\BuildedSquadList.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\UI\bracket_friendly.png" />
+    <Resource Include="Pages\UI\button_back%402x.png" />
+    <Resource Include="Pages\UI\button_primary_left.png" />
+    <Resource Include="Pages\UI\icon_mana-hd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\UI\GeneralSelectedState.png" />
+    <Resource Include="Pages\UI\General_unselected_State.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

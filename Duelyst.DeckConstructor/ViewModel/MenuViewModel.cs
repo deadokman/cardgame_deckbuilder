@@ -1,4 +1,6 @@
 ﻿using System.Windows.Input;
+using System.Windows.Navigation;
+using Duelyst.DeckConstructor.Pages;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -7,7 +9,6 @@ namespace Duelyst.DeckConstructor.ViewModel
 {
     public class MenuViewModel : ResizableViewModelBase
     {
-
         public MenuViewModel()
         {
             NewDeckCommand = new RelayCommand(NotfyNewDeck);

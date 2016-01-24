@@ -43,8 +43,9 @@ namespace Duelyst.DeckConstructor.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<MainPageViewModel>();
+            SimpleIoc.Default.Register<AppBackgroundPageViewModel>();
             SimpleIoc.Default.Register<MenuViewModel>();
+            SimpleIoc.Default.Register<DeckConstructorViewModel>();
         }
 
         public MainViewModel Main
@@ -55,12 +56,17 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
 
-        public MainPageViewModel MainPage
+        public AppBackgroundPageViewModel AppBackgroundPage
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<MainPageViewModel>();
+                return ServiceLocator.Current.GetInstance<AppBackgroundPageViewModel>();
             }
+        }
+
+        public DeckConstructorViewModel DeckConstructorViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<DeckConstructorViewModel>(); }
         }
 
         public MenuViewModel MenuMain
