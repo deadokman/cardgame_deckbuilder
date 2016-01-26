@@ -2,17 +2,16 @@
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardGeneral : ViewModelBase
+    public class CardGeneral : DeckCardItemViewModel
     {
         private bool _isAvailebleToSelect;
         private bool _isSelected;
 
-        public CardGeneral(string generalName)
+        public CardGeneral(string name)
+            :base(0, name)
         {
-            GeneralName = generalName;
         }
 
-        public string GeneralName { get; set; }
 
         public bool IsAvailebleToSelect
         {

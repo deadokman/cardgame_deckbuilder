@@ -1,35 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Documents;
+using System.Windows.Input;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
+using GalaSoft.MvvmLight.Command;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
     public class DeckConstructorViewModel : ResizableViewModelBase
     {
+        private ICommand _cardClickedCommand;
+
         public DeckConstructorViewModel()
         {
             InitCardChartInfoCollection();
             DeckCardItems = new ObservableCollection<DeckCardItemViewModel>();
             Generals = new ObservableCollection<CardGeneral>();
+            DisplayedCardViewModels = new ObservableCollection<DeckCardItemViewModel>();
+            CardClickedCommand = new RelayCommand<DeckCardItemViewModel>(OnCardClicked);
             InitData();
         }
 
         private void InitData()
         {
-            //TestData
-            DeckCardItems.Add(new DeckCardItemViewModel(0, "TESTC1"));
-            DeckCardItems.Add(new DeckCardItemViewModel(2, "TESTC3"));
             //
+            DisplayedCardViewModels.Add(new DeckCardItemViewModel(0, "TEST_CARD123"));
+            DisplayedCardViewModels.Add(new DeckCardItemViewModel(0, "TEST_CARD12"));
+            DisplayedCardViewModels.Add(new DeckCardItemViewModel(0, "TEST_CARD156"));
             Generals.Add(new CardGeneral("GENERAL1"));
         }
 
+
+        private void OnCardClicked(DeckCardItemViewModel item)
+        {
+            //Произвести добавление карты в колоду            
+        }
+
+        public ICommand CardClickedCommand
+        {
+            get { return _cardClickedCommand; }
+            set { _cardClickedCommand = value; }
+        }
+
+        /// <summary>
+        /// Карты добавленные в колоду
+        /// </summary>
         public ObservableCollection<DeckCardItemViewModel> DeckCardItems { get; set; } 
 
+        /// <summary>
+        /// Доступные генералы
+        /// </summary>
         public ObservableCollection<CardGeneral> Generals { get; set; } 
+
+        /// <summary>
+        /// Карты, отображаемые на доске для выбора
+        /// </summary>
+        public ObservableCollection<DeckCardItemViewModel> DisplayedCardViewModels { get; set; }
+
 
         private void InitCardChartInfoCollection()
         {
