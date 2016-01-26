@@ -139,7 +139,7 @@
                         </ToolBar>
                     </Grid>
                 </Grid>
-                <Frame />
+                <Frame Grid.Row="1" Source="CardPresenterPage.xaml"  NavigationUIVisibility="Hidden"/>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.Background>

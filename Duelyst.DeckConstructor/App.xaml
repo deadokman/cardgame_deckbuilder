@@ -3,7 +3,7 @@
   <ResourceDictionary>
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
-                    <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Duelyst.DeckConstructor.ViewModel" />
+            <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Duelyst.DeckConstructor.ViewModel" />
         </ResourceDictionary>
       <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
       <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
