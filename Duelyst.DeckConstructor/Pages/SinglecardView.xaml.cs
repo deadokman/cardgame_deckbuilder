@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MahApps.Metro.Controls;
 
 namespace Duelyst.DeckConstructor.Pages
 {
@@ -12,10 +16,10 @@ namespace Duelyst.DeckConstructor.Pages
     public partial class SinglecardView : UserControl
     {
         // Статическое свойство только для чтения DependencyProperty.
-        private static DependencyProperty imageSourceProperty = 
+        private static DependencyProperty imageSourceProperty =
                 DependencyProperty.Register(
-                "CardImageSource",
-                typeof(Uri), typeof(SinglecardView));
+                "CardSource",
+                typeof(BitmapImage), typeof(SinglecardView));
 
         private static DependencyProperty cardDeckcountProperty = DependencyProperty.Register(
                 "IndeckCount",
@@ -28,7 +32,7 @@ namespace Duelyst.DeckConstructor.Pages
 
         public string IndeckCount
         {
-            get { return (string)GetValue(cardDeckcountProperty);}
+            get { return (string)GetValue(cardDeckcountProperty); }
             set
             {
                 SetValue(cardDeckcountProperty, value);
@@ -44,5 +48,21 @@ namespace Duelyst.DeckConstructor.Pages
             }
         }
 
+        private static ICommand _clickCommand;
+
+        public event EventHandler CardClickedHandler;
+
+        private void RaiseClicked()
+        {
+            if (CardClickedHandler != null)
+            {
+                CardClickedHandler(this, new AddingNewItemEventArgs());
+            }
+        }
+
+        private void CardImage_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            RaiseClicked();
+        }
     }
 }
