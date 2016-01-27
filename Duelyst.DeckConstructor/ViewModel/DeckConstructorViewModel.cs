@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Input;
+using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 using GalaSoft.MvvmLight.Command;
 
@@ -11,27 +15,111 @@ namespace Duelyst.DeckConstructor.ViewModel
     {
         private ICommand _cardClickedCommand;
 
+        /// <summary>
+        /// Каталог с полным набором карт
+        /// </summary>
+        public CardsCatalog Catalog;
+
+        /// <summary>
+        /// Максимальное количество карт отображаемое на странице
+        /// </summary>
+        //TODO: DEFINE GLOBAL CONFIG
+        private const int MaxCardDiplayCount = 8;
+
+        /// <summary>
+        /// Количество страниц с картами для генерала
+        /// </summary>
+        private int _pagesForGeneral;
+
+        private int _currentPage;
+
+        /// <summary>
+        /// Индекс текущей страницы
+        /// </summary>
+        private int CurrentPage
+        {
+            get { return _currentPage; }
+            set
+            {
+                _currentPage = value;
+                ChangeDisplayCards(value, MaxCardDiplayCount, SelectedGeneral);
+            }
+        }
+
+        /// <summary>
+        /// Текущий выбранный генерал
+        /// </summary>
+        public CardGeneral SelectedGeneral { get; private set; }
+
+
         public DeckConstructorViewModel()
         {
+            Catalog = CardsCatalog.Instance;
             InitCardChartInfoCollection();
-            DeckCardItems = new ObservableCollection<DeckCardItemViewModel>();
-            Generals = new ObservableCollection<CardGeneral>();
-            DisplayedCardViewModels = new ObservableCollection<DeckCardItemViewModel>();
-            CardClickedCommand = new RelayCommand<DeckCardItemViewModel>(OnCardClicked);
+            DeckCardItems = new ObservableCollection<CardItemViewModelBase>();
+            Generals = new ObservableCollection<CardGeneral>(Catalog.ViewModelGenerals);
+            DisplayedCardViewModels = new ObservableCollection<CardItemViewModelBase>();
+            CardClickedCommand = new RelayCommand<CardItemViewModelBase>(OnCardClicked);
             InitData();
+        }
+
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            foreach (var cardGeneral in Generals)
+            {
+                cardGeneral.IAmSelected -= OnGeneralSelectionChanged;
+            }
         }
 
         private void InitData()
         {
-            //
-            DisplayedCardViewModels.Add(new DeckCardItemViewModel(0, "TEST_CARD123"));
-            DisplayedCardViewModels.Add(new DeckCardItemViewModel(0, "TEST_CARD12"));
-            DisplayedCardViewModels.Add(new DeckCardItemViewModel(0, "TEST_CARD156"));
-            Generals.Add(new CardGeneral("GENERAL1"));
+            if (Generals.Count > 0)
+            {
+                foreach (var cardGeneral in Generals)
+                {
+                    cardGeneral.IAmSelected += OnGeneralSelectionChanged;
+                }
+                Generals.First().IsSelected = true;
+            }
         }
 
+        private void OnGeneralSelectionChanged(CardGeneral general)
+        {
+            SelectedGeneral = general;
+            //Отключить выделение у всех остальных генералов
+            Generals.Where(g => !g.Equals(SelectedGeneral))
+                .ToList().ForEach(g=> g.IsSelected = false);
+            _pagesForGeneral =
+                Convert.ToInt32(Math.Ceiling((double) (SelectedGeneral.CardViewModels.Count/MaxCardDiplayCount)));
+            CurrentPage = 0;
+        }
 
-        private void OnCardClicked(DeckCardItemViewModel item)
+        /// <summary>
+        /// Изменить отображаемые карты
+        /// </summary>
+        private void ChangeDisplayCards(int currentPage, int cardOnPage, CardGeneral selecCardGeneral)
+        {
+            if (selecCardGeneral == null)
+            {
+                return;
+            }
+
+            var lastIdx = (currentPage + 1) * cardOnPage;
+            var firstIdx = lastIdx - cardOnPage;
+            if (lastIdx > selecCardGeneral.CardViewModels.Count)
+            {
+                lastIdx = selecCardGeneral.CardViewModels.Count;
+            }
+
+            DisplayedCardViewModels.Clear();
+            for (var idx = firstIdx; idx < lastIdx; idx++)
+            {
+                DisplayedCardViewModels.Add(selecCardGeneral.CardViewModels[idx]);
+            }
+        }
+
+        private void OnCardClicked(CardItemViewModelBase item)
         {
             //Произвести добавление карты в колоду            
         }
@@ -45,7 +133,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// <summary>
         /// Карты добавленные в колоду
         /// </summary>
-        public ObservableCollection<DeckCardItemViewModel> DeckCardItems { get; set; } 
+        public ObservableCollection<CardItemViewModelBase> DeckCardItems { get; set; } 
 
         /// <summary>
         /// Доступные генералы
@@ -55,7 +143,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// <summary>
         /// Карты, отображаемые на доске для выбора
         /// </summary>
-        public ObservableCollection<DeckCardItemViewModel> DisplayedCardViewModels { get; set; }
+        public ObservableCollection<CardItemViewModelBase> DisplayedCardViewModels { get; set; }
 
 
         private void InitCardChartInfoCollection()

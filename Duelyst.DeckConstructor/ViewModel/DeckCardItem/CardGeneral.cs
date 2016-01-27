@@ -1,18 +1,41 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Media.Imaging;
+using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardGeneral : DeckCardItemViewModel
+    public class CardGeneral : CardItemViewModelBase, IEquatable<CardGeneral>
     {
         private bool _isAvailebleToSelect;
         private bool _isSelected;
 
         public CardGeneral(string name)
-            :base(0, name)
+            : base(name)
         {
+            CardViewModels = new List<CardItemViewModelBase>();
         }
 
+        public delegate void GeneralSelectionChanged(CardGeneral general);
 
+        public event GeneralSelectionChanged IAmSelected;
+
+        private void RaiseIamSelected()
+        {
+            if (IAmSelected != null)
+            {
+                IAmSelected(this);
+            }
+        }
+
+        /// <summary>
+        /// Cписок подчиненных генералу карт
+        /// </summary>
+        public List<CardItemViewModelBase> CardViewModels { get; set; }
+
+        /// <summary>
+        /// Генерал доступен для выбора
+        /// </summary>
         public bool IsAvailebleToSelect
         {
             get { return _isAvailebleToSelect; }
@@ -23,6 +46,9 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             }
         }
 
+        /// <summary>
+        /// Генерал выбран
+        /// </summary>
         public bool IsSelected
         {
             get { return _isSelected; }
@@ -30,7 +56,16 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             {
                 _isSelected = value; 
                 RaisePropertyChanged(() => IsSelected);
+                if (_isSelected)
+                {
+                    RaiseIamSelected();
+                }
             }
+        }
+
+        public bool Equals(CardGeneral other)
+        {
+            return this.Name == other.Name;
         }
     }
 }

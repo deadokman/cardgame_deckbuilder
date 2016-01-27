@@ -5,10 +5,10 @@
     /// </summary>
     public enum ECardType
     {
-        None,
-        PlayableCreature,
-        Spell,
-        Artefact,
-        General
+        None = 0,
+        PlayableCreature = 1,
+        Spell = 2,
+        Artefact = 3,
+        General = 10
     }
 }

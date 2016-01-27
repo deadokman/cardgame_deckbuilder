@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="De.TorstenMandelkow.MetroChart, Version=0.9.5818.20693, Culture=neutral, processorArchitecture=MSIL">
@@ -93,6 +95,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -103,6 +106,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CardCatalog\CardDtoItem.cs" />
+    <Compile Include="CardCatalog\CardGeneralDto.cs" />
     <Compile Include="CardCatalog\CardsCatalog.cs" />
     <Compile Include="CardCatalog\ECardType.cs" />
     <Compile Include="ForegroudTemple.xaml.cs">
@@ -134,7 +138,7 @@
     <Compile Include="ViewModel\Communication\CommEventType.cs" />
     <Compile Include="ViewModel\Communication\NavigationMessage.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardGeneral.cs" />
-    <Compile Include="ViewModel\DeckCardItem\DeckCardItemViewModel.cs" />
+    <Compile Include="ViewModel\DeckCardItem\CardItemViewModelBase.cs" />
     <Compile Include="ViewModel\DeckConstructorViewModel.cs" />
     <Compile Include="ViewModel\Ifaces\IResizeableViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
@@ -265,7 +269,11 @@
   <ItemGroup>
     <Resource Include="Pages\UI\NO_CARD_DAT.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="CardImageData\CardData.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

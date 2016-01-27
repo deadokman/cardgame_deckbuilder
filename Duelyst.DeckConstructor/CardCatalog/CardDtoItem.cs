@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Duelyst.DeckConstructor.CardCatalog
 {
@@ -17,24 +18,28 @@ namespace Duelyst.DeckConstructor.CardCatalog
         /// Название карты
         /// </summary>
         [DataMember]
+        [XmlAttribute]
         public string Name { get; set; }
 
         /// <summary>
         /// Тип карты (заклинение, артифакт, существо, генерал)
         /// </summary>
         [DataMember]
+        [XmlAttribute]
         public int CardType { get; set; }
 
         /// <summary>
         /// Максимальное количество в колоде
         /// </summary>
         [DataMember]
+        [XmlAttribute]
         public int MaxIndeckCount { get; set; }
 
         /// <summary>
         /// Цена карты
         /// </summary>
         [DataMember]
+        [XmlAttribute]
         public int ManaCost { get; set; }
 
         /// <summary>
@@ -53,12 +58,18 @@ namespace Duelyst.DeckConstructor.CardCatalog
         /// Описание карты
         /// </summary>
         [DataMember]
+        [XmlAttribute]
         public string Description { get; set; }
 
         /// <summary>
         /// Способность (предсмертный хрип, боевой клич)
         /// </summary>
         [DataMember]
+        [XmlAttribute]
         public string AbilityName { get; set; }
+
+        [DataMember]
+        [XmlAttribute]
+        public string CardImageName { get; set; }
     }
 }

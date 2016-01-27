@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfCardGeneralDto xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CardGeneralDto
+    CardImageName="Heaven's_Eclipse.png"
+    Name="Songahai"
+    CardType="10"
+    MaxIndeckCount="1"
+    ManaCost="0"
+    AbilityName="NoAbility"
+    Description="MyTestGeneral"
+    IsNetural="false">
+    <Attack>3</Attack>
+    <Health>25</Health>
+    <GeneralCards>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+      <CardDtoItem
+        CardImageName="Heaven's_Eclipse.png"
+        Name="Heaven's eclipse"
+        CardType="2"
+        MaxIndeckCount="3"
+        ManaCost="4"
+        Description="LALALKA, LALKA">
+      </CardDtoItem>
+    </GeneralCards>
+  </CardGeneralDto>
+</ArrayOfCardGeneralDto>

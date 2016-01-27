@@ -117,7 +117,7 @@
                                                         </Style>
                                                     </Border.Style>
                                                     <TextBlock Margin="5,5,5,5" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Left" 
-                                                               TextAlignment="Left"  Text="{Binding GeneralName}" FontFamily="Segoe WP SemiLight">
+                                                               TextAlignment="Left" Text="{Binding Name}" FontFamily="Segoe WP SemiLight">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
                                                                 <Style.Triggers>
@@ -168,7 +168,7 @@
                     <RowDefinition Height=".1*"/>
                     <RowDefinition Height=".4*"/>
                     <RowDefinition Height=".1*"/>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height=".1*"/>
                     <RowDefinition Height=".1*"/>
                 </Grid.RowDefinitions>
                 <TextBox Margin="1,1,1,1" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>

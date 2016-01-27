@@ -17,14 +17,14 @@ namespace Duelyst.DeckConstructor.Pages
         /// <summary>
         /// Список текущих отображаемых карт
         /// </summary>
-        private IList<DeckCardItemViewModel> _currentDisplay;
+        private IList<CardItemViewModelBase> _currentDisplay;
 
         /// <summary>
         /// Регистрация свойства для биндинга списка отображаемых карт
         /// </summary>
         private static DependencyProperty cardDeckcountProperty = DependencyProperty.Register(
         "CardSource",
-        typeof(IList<DeckCardItemViewModel>), typeof(CardPresenterPage), new PropertyMetadata(new List<DeckCardItemViewModel>(), InitCardData));
+        typeof(IList<CardItemViewModelBase>), typeof(CardPresenterPage), new PropertyMetadata(new List<CardItemViewModelBase>(), InitCardData));
 
 
         private static DependencyProperty cardClickCommand = DependencyProperty.Register(
@@ -50,32 +50,32 @@ namespace Duelyst.DeckConstructor.Pages
         public CardPresenterPage()
         {
             InitializeComponent();
-            _currentDisplay = new List<DeckCardItemViewModel>();
+            _currentDisplay = new List<CardItemViewModelBase>();
             _cardViews = new List<SinglecardView>(CardviewsPresenters);
             InitViewPresenters();
         }
 
-        private void SetCurrentDisplay(IList<DeckCardItemViewModel>  data)
+        private void SetCurrentDisplay(IList<CardItemViewModelBase>  data)
         {
             _currentDisplay = data;
         }
 
         private void InitViewPresenters()
         {
-            _cardViews[0] = V00;
-            _cardViews[1] = V01;
-            _cardViews[2] = V02;
-            _cardViews[3] = V03;
-            _cardViews[4] = V10;
-            _cardViews[5] = V11;
-            _cardViews[6] = V12;
-            _cardViews[7] = V13;
+            _cardViews.Add(V00);
+            _cardViews.Add(V01);
+            _cardViews.Add(V02);
+            _cardViews.Add(V03);
+            _cardViews.Add(V10);
+            _cardViews.Add(V11);
+            _cardViews.Add(V12);
+            _cardViews.Add(V13);
         }
 
         private static void InitCardData(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var ctrl = d as CardPresenterPage;
-            var items = (IList<DeckCardItemViewModel>)e.NewValue;
+            var items = (IList<CardItemViewModelBase>)e.NewValue;
             if (items == null || ctrl == null)
             {
                 return;
@@ -93,7 +93,7 @@ namespace Duelyst.DeckConstructor.Pages
                 var item = _cardViews[v];
                 if (v < itemsCount)
                 {
-                    item.CardSource = items[v].Image;
+                    item.CardImage.Source = items[v].Image;
                     item.IsEnabled = true;
                 }
                 else
@@ -105,7 +105,7 @@ namespace Duelyst.DeckConstructor.Pages
 
         public event CardSelectedEventHandler CardClicked;
 
-        private void RaiseCardClicked(DeckCardItemViewModel i)
+        private void RaiseCardClicked(CardItemViewModelBase i)
         {
             if (_clickCommand != null)
             {
@@ -118,11 +118,11 @@ namespace Duelyst.DeckConstructor.Pages
             }
         }
 
-        public IList<DeckCardItemViewModel> CardSource
+        public IList<CardItemViewModelBase> CardSource
         {
             get
             {
-                return (IList<DeckCardItemViewModel>)GetValue(cardDeckcountProperty);
+                return (IList<CardItemViewModelBase>)GetValue(cardDeckcountProperty);
             }
             set
             {
@@ -148,7 +148,7 @@ namespace Duelyst.DeckConstructor.Pages
             }
         }
 
-        public delegate void CardSelectedEventHandler(DeckCardItemViewModel e);
+        public delegate void CardSelectedEventHandler(CardItemViewModelBase e);
 
         private void CaldViewClickedCallback(object sender)
         {

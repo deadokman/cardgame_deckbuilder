@@ -20,9 +20,9 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>-->
-        <Image MouseUp="CardImage_OnMouseUp" Stretch="None"  Margin="5,5,5,5" Grid.Row="0" Name="CardImage">
+        <Image MouseUp="CardImage_OnMouseUp" Stretch="Uniform"  Margin="5,5,5,5" Grid.Row="0" Name="CardImage">
             <Image.Effect>
-                <DropShadowEffect Direction="-20" ShadowDepth="25" BlurRadius="10" Color="Black" Opacity="10" />
+                <DropShadowEffect Direction="-20" ShadowDepth="5" BlurRadius="10" Color="Black" Opacity="80" />
             </Image.Effect>
         </Image>
         <TextBlock Margin="5,5,5,5" Name="InDeckCount" Grid.Row="1" VerticalAlignment="Center"/>
