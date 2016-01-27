@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Duelyst.DeckConstructor.CardCatalog;
+
 namespace Duelyst.DeckConstructor
 {
     /// <summary>
@@ -13,5 +15,6 @@ namespace Duelyst.DeckConstructor
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,19 +14,45 @@ namespace Duelyst.DeckConstructor.Pages
     /// </summary>
     public partial class CardPresenterPage : UserControl
     {
-
+        /// <summary>
+        /// Список текущих отображаемых карт
+        /// </summary>
         private IList<DeckCardItemViewModel> _currentDisplay;
 
+        /// <summary>
+        /// Регистрация свойства для биндинга списка отображаемых карт
+        /// </summary>
         private static DependencyProperty cardDeckcountProperty = DependencyProperty.Register(
         "CardSource",
         typeof(IList<DeckCardItemViewModel>), typeof(CardPresenterPage), new PropertyMetadata(new List<DeckCardItemViewModel>(), InitCardData));
 
+
+        private static DependencyProperty cardClickCommand = DependencyProperty.Register(
+        "Command",
+        typeof(ICommand), typeof(CardPresenterPage), new PropertyMetadata(new RelayCommand(() => { return; }), SetNewClickCommand));
+
+
+        /// <summary>
+        /// Ссылка на хендлер для обработчика клика на карту
+        /// </summary>
         private static ICommand _clickCommand;
+
+        /// <summary>
+        /// Список представлений для карт
+        /// </summary>
+        private static List<SinglecardView> _cardViews;
+
+        /// <summary>
+        /// Общее количество представлений для крат
+        /// </summary>
+        private const int CardviewsPresenters = 8;
 
         public CardPresenterPage()
         {
             InitializeComponent();
             _currentDisplay = new List<DeckCardItemViewModel>();
+            _cardViews = new List<SinglecardView>(CardviewsPresenters);
+            InitViewPresenters();
         }
 
         private void SetCurrentDisplay(IList<DeckCardItemViewModel>  data)
@@ -33,41 +60,45 @@ namespace Duelyst.DeckConstructor.Pages
             _currentDisplay = data;
         }
 
+        private void InitViewPresenters()
+        {
+            _cardViews[0] = V00;
+            _cardViews[1] = V01;
+            _cardViews[2] = V02;
+            _cardViews[3] = V03;
+            _cardViews[4] = V10;
+            _cardViews[5] = V11;
+            _cardViews[6] = V12;
+            _cardViews[7] = V13;
+        }
+
         private static void InitCardData(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var ctrl = d as CardPresenterPage;
             var items = (IList<DeckCardItemViewModel>)e.NewValue;
-            ctrl.SetCurrentDisplay(items);
-            for (int v = 0; v < items.Count; v++)
-
+            if (items == null || ctrl == null)
             {
-                switch (v)
+                return;
+            }
+
+            ctrl.SetCurrentDisplay(items);
+            var itemsCount = items.Count();
+            if (itemsCount == 0)
+            {
+                return;
+            }
+
+            for (int v = 0; v < CardviewsPresenters; v++)
+            {
+                var item = _cardViews[v];
+                if (v < itemsCount)
                 {
-                    case 0:
-                        ctrl.V00.CardImage.Source = items[v].Image;
-                        break;
-                    case 1:
-                        ctrl.V01.CardImage.Source = items[v].Image;
-                        break;
-                    case 2:
-                        ctrl.V02.CardImage.Source = items[v].Image;
-                        break;
-                    case 3:
-                        ctrl.V03.CardImage.Source = items[v].Image;
-                        break;
-                    case 4:
-                        ctrl.V10.CardImage.Source = items[v].Image;
-                        break;
-                    case 5:
-                        ctrl.V11.CardImage.Source = items[v].Image;
-                        break;
-                    case 6:
-                        ctrl.V12.CardImage.Source = items[v].Image;
-                        break;
-                    case 7:
-                        ctrl.V13.CardImage.Source = items[v].Image;
-                        break;
-                    default: break;
+                    item.CardSource = items[v].Image;
+                    item.IsEnabled = true;
+                }
+                else
+                {
+                    item.IsEnabled = false;
                 }
             }
         }
@@ -80,6 +111,7 @@ namespace Duelyst.DeckConstructor.Pages
             {
                 _clickCommand.Execute(i);
             }
+
             if (CardClicked != null)
             {
                 CardClicked(i);
@@ -88,17 +120,15 @@ namespace Duelyst.DeckConstructor.Pages
 
         public IList<DeckCardItemViewModel> CardSource
         {
-            get { return (IList<DeckCardItemViewModel>)GetValue(cardDeckcountProperty); }
+            get
+            {
+                return (IList<DeckCardItemViewModel>)GetValue(cardDeckcountProperty);
+            }
             set
             {
                 SetValue(cardDeckcountProperty, value);
             }
         }
-
-
-        private static DependencyProperty cardClickCommand = DependencyProperty.Register(
-        "Command",
-        typeof(ICommand), typeof(CardPresenterPage), new PropertyMetadata(new RelayCommand(() => {return;}), SetNewClickCommand));
 
         private static void SetNewClickCommand(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -120,14 +150,22 @@ namespace Duelyst.DeckConstructor.Pages
 
         public delegate void CardSelectedEventHandler(DeckCardItemViewModel e);
 
-        private void V00_OnCardClickedHandler(object sender, EventArgs e)
+        private void CaldViewClickedCallback(object sender)
         {
-            RaiseCardClicked(_currentDisplay[0]);
+            var view = sender as SinglecardView;
+            if (view != null)
+            {
+                var idx=  _cardViews.IndexOf(view);
+                if (idx != -1 && _currentDisplay.Count != 0 && idx < _currentDisplay.Count)
+                {
+                    RaiseCardClicked(_currentDisplay[idx]);
+                }
+            }
         }
 
-        private void V01_OnCardClickedHandler(object sender, EventArgs e)
+        private void OnCardClickedHandler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            CaldViewClickedCallback(sender);
         }
     }
 }
