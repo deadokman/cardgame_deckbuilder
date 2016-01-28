@@ -126,7 +126,6 @@ namespace Duelyst.DeckConstructor.CardCatalog
             {
                 
             }
-
         }
 
         public void InitData()
@@ -153,7 +152,12 @@ namespace Duelyst.DeckConstructor.CardCatalog
 
             producedType.MaxInDeck = dto.MaxIndeckCount;
             producedType.ManaCost = dto.ManaCost;
-            producedType.CardType = (ECardType) dto.CardType;
+            ECardType cardType;
+            if (!Enum.TryParse(dto.CardType, out cardType))
+            {
+                cardType = ECardType.None;
+            }
+            producedType.CardType = cardType;
 
             return producedType;
         } 

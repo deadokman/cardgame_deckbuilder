@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,13 +25,35 @@ namespace Duelyst.DeckConstructor.Pages
         /// </summary>
         private static DependencyProperty cardDeckcountProperty = DependencyProperty.Register(
         "CardSource",
-        typeof(IList<CardItemViewModelBase>), typeof(CardPresenterPage), new PropertyMetadata(new List<CardItemViewModelBase>(), InitCardData));
+        typeof(IList<CardItemViewModelBase>), typeof(CardPresenterPage), new PropertyMetadata(null, InitCardData));
 
+        public ObservableCollection<CardItemViewModelBase> CardSource
+        {
+            get
+            {
+                return (ObservableCollection<CardItemViewModelBase>)GetValue(cardDeckcountProperty);
+            }
+            set
+            {
+                SetValue(cardDeckcountProperty, value);
+            }
+        }
 
         private static DependencyProperty cardClickCommand = DependencyProperty.Register(
         "Command",
         typeof(ICommand), typeof(CardPresenterPage), new PropertyMetadata(new RelayCommand(() => { return; }), SetNewClickCommand));
 
+        public ICommand Command
+        {
+            get
+            {
+                return (ICommand)GetValue(cardClickCommand);
+            }
+            set
+            {
+                SetValue(cardDeckcountProperty, value);
+            }
+        }
 
         /// <summary>
         /// Ссылка на хендлер для обработчика клика на карту
@@ -98,6 +121,7 @@ namespace Duelyst.DeckConstructor.Pages
                 }
                 else
                 {
+                    item.CardImage.Source = null;
                     item.IsEnabled = false;
                 }
             }
@@ -118,34 +142,10 @@ namespace Duelyst.DeckConstructor.Pages
             }
         }
 
-        public IList<CardItemViewModelBase> CardSource
-        {
-            get
-            {
-                return (IList<CardItemViewModelBase>)GetValue(cardDeckcountProperty);
-            }
-            set
-            {
-                SetValue(cardDeckcountProperty, value);
-            }
-        }
-
         private static void SetNewClickCommand(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var items = (ICommand)e.NewValue;
             _clickCommand = items;
-        }
-
-        public ICommand Command
-        {
-            get
-            {
-                return (ICommand)GetValue(cardClickCommand);
-            }
-            set
-            {
-                SetValue(cardDeckcountProperty, value);
-            }
         }
 
         public delegate void CardSelectedEventHandler(CardItemViewModelBase e);

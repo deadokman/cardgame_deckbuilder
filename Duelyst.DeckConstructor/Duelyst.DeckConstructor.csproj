@@ -108,6 +108,7 @@
     <Compile Include="CardCatalog\CardDtoItem.cs" />
     <Compile Include="CardCatalog\CardGeneralDto.cs" />
     <Compile Include="CardCatalog\CardsCatalog.cs" />
+    <Compile Include="CardCatalog\ECardRarity.cs" />
     <Compile Include="CardCatalog\ECardType.cs" />
     <Compile Include="ForegroudTemple.xaml.cs">
       <DependentUpon>ForegroudTemple.xaml</DependentUpon>

@@ -10,8 +10,8 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height=".9*"/>
-            <RowDefinition Height=".1*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!--<Button Click="ButtonBase_OnClick" Name="Im" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="0">
                 <Button.Template>
@@ -20,11 +20,11 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>-->
-        <Image MouseUp="CardImage_OnMouseUp" Stretch="Uniform"  Margin="5,5,5,5" Grid.Row="0" Name="CardImage">
+        <Image MouseUp="CardImage_OnMouseUp" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform"  Margin="5,5,5,5" Grid.Row="0" Name="CardImage">
             <Image.Effect>
                 <DropShadowEffect Direction="-20" ShadowDepth="5" BlurRadius="10" Color="Black" Opacity="80" />
             </Image.Effect>
         </Image>
-        <TextBlock Margin="5,5,5,5" Name="InDeckCount" Grid.Row="1" VerticalAlignment="Center"/>
+        <TextBlock Margin="5,5,5,5" Name="InDeckCount" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>

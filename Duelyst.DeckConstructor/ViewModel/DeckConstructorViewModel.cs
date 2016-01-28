@@ -7,12 +7,25 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
     public class DeckConstructorViewModel : ResizableViewModelBase
     {
+        public DeckConstructorViewModel()
+        {
+            Catalog = CardsCatalog.Instance;
+            InitCardChartInfoCollection();
+            DeckCardItems = new ObservableCollection<CardItemViewModelBase>();
+            Generals = new ObservableCollection<CardGeneral>(Catalog.ViewModelGenerals);
+            DisplayedCardViewModels = new List<CardItemViewModelBase>();
+            CardClickedCommand = new GalaSoft.MvvmLight.Command.RelayCommand<CardItemViewModelBase>(OnCardClicked);
+            ListRight = new RelayCommand(OnCardListRightCallback);
+            ListLeft = new RelayCommand(OnCardListLeftCallback);
+            InitData();
+        }
+
         private ICommand _cardClickedCommand;
 
         /// <summary>
@@ -32,6 +45,8 @@ namespace Duelyst.DeckConstructor.ViewModel
         private int _pagesForGeneral;
 
         private int _currentPage;
+        private List<CardItemViewModelBase> _displayedCardViewModels;
+        private CardGeneral _selectedGeneral;
 
         /// <summary>
         /// Индекс текущей страницы
@@ -49,19 +64,25 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// <summary>
         /// Текущий выбранный генерал
         /// </summary>
-        public CardGeneral SelectedGeneral { get; private set; }
-
-
-        public DeckConstructorViewModel()
+        public CardGeneral SelectedGeneral
         {
-            Catalog = CardsCatalog.Instance;
-            InitCardChartInfoCollection();
-            DeckCardItems = new ObservableCollection<CardItemViewModelBase>();
-            Generals = new ObservableCollection<CardGeneral>(Catalog.ViewModelGenerals);
-            DisplayedCardViewModels = new ObservableCollection<CardItemViewModelBase>();
-            CardClickedCommand = new RelayCommand<CardItemViewModelBase>(OnCardClicked);
-            InitData();
+            get { return _selectedGeneral; }
+            private set
+            {
+                _selectedGeneral = value;
+                value.IsSelected = true;
+            }
         }
+
+        /// <summary>
+        /// Пролистнуть список карт в право
+        /// </summary>
+        public ICommand ListRight { get; set; }
+
+        /// <summary>
+        /// Пролистнуть список карт в лево
+        /// </summary>
+        public ICommand ListLeft { get; set; }
 
         public override void Cleanup()
         {
@@ -80,13 +101,12 @@ namespace Duelyst.DeckConstructor.ViewModel
                 {
                     cardGeneral.IAmSelected += OnGeneralSelectionChanged;
                 }
-                Generals.First().IsSelected = true;
+                SelectedGeneral = Generals.First();
             }
         }
 
         private void OnGeneralSelectionChanged(CardGeneral general)
         {
-            SelectedGeneral = general;
             //Отключить выделение у всех остальных генералов
             Generals.Where(g => !g.Equals(SelectedGeneral))
                 .ToList().ForEach(g=> g.IsSelected = false);
@@ -107,16 +127,8 @@ namespace Duelyst.DeckConstructor.ViewModel
 
             var lastIdx = (currentPage + 1) * cardOnPage;
             var firstIdx = lastIdx - cardOnPage;
-            if (lastIdx > selecCardGeneral.CardViewModels.Count)
-            {
-                lastIdx = selecCardGeneral.CardViewModels.Count;
-            }
 
-            DisplayedCardViewModels.Clear();
-            for (var idx = firstIdx; idx < lastIdx; idx++)
-            {
-                DisplayedCardViewModels.Add(selecCardGeneral.CardViewModels[idx]);
-            }
+            DisplayedCardViewModels = selecCardGeneral.CardViewModels.Skip(firstIdx).Take(cardOnPage).ToList();
         }
 
         private void OnCardClicked(CardItemViewModelBase item)
@@ -138,13 +150,79 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// <summary>
         /// Доступные генералы
         /// </summary>
-        public ObservableCollection<CardGeneral> Generals { get; set; } 
+        public ObservableCollection<CardGeneral> Generals { get; set; }
 
         /// <summary>
         /// Карты, отображаемые на доске для выбора
         /// </summary>
-        public ObservableCollection<CardItemViewModelBase> DisplayedCardViewModels { get; set; }
+        public List<CardItemViewModelBase> DisplayedCardViewModels
+        {
+            get { return _displayedCardViewModels; }
+            set
+            {
+                _displayedCardViewModels = value;
+                RaisePropertyChanged(() => DisplayedCardViewModels);
+            }
+        }
 
+        /// <summary>
+        /// Пролистнуть карты в лево
+        /// </summary>
+        private void OnCardListLeftCallback()
+        {
+            if (CurrentPage == 0)
+            {
+                //Если достигнута первая для генерала страница
+                var generalIndex = TakeSelectedGeneralIndex();
+                if (generalIndex != 0)
+                {
+                    //Если выбран не первый из генералов
+                    SelectedGeneral = Generals[generalIndex - 1];
+                    CurrentPage = _pagesForGeneral;
+                }
+            }
+            else
+            {
+                //Если страница не первая
+                CurrentPage--;
+            }
+        }
+
+        /// <summary>
+        /// Пролистнуть карты в право
+        /// </summary>
+        private void OnCardListRightCallback()
+        {
+            if (_pagesForGeneral == CurrentPage)
+            {
+                //Если достигнута последняя доступная для генерала страница
+                var generalIndex = TakeSelectedGeneralIndex();
+                if (generalIndex < Generals.Count - 1)
+                {
+                    //Если выбран не последний генерал, то перелистнуть на следующего по счету генерала
+                    SelectedGeneral = Generals[generalIndex + 1];
+                }
+            }
+            else
+            {
+                //Если страница не последняя
+                CurrentPage++;
+            }
+        }
+
+        private int TakeSelectedGeneralIndex()
+        {
+            if (SelectedGeneral != null)
+            {
+                var idx =  Generals.IndexOf(SelectedGeneral);
+                if (idx == -1)
+                {
+                    throw new Exception("General not found in collection");
+                }
+                return idx;
+            }
+            throw new Exception("General does not selected");
+        }
 
         private void InitCardChartInfoCollection()
         {

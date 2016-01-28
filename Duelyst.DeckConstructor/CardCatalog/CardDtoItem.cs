@@ -26,7 +26,7 @@ namespace Duelyst.DeckConstructor.CardCatalog
         /// </summary>
         [DataMember]
         [XmlAttribute]
-        public int CardType { get; set; }
+        public string CardType { get; set; }
 
         /// <summary>
         /// Максимальное количество в колоде
@@ -67,6 +67,10 @@ namespace Duelyst.DeckConstructor.CardCatalog
         [DataMember]
         [XmlAttribute]
         public string AbilityName { get; set; }
+
+        [DataMember]
+        [XmlAttribute]
+        public string CardRarity { get; set; }
 
         [DataMember]
         [XmlAttribute]

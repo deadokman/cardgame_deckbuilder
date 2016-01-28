@@ -99,14 +99,7 @@
                                                                 </Setter.Value>
                                                             </Setter>
                                                             <Style.Triggers>
-                                                                <DataTrigger  Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                                                    <Setter Property="Effect">
-                                                                        <Setter.Value>
-                                                                            <DropShadowEffect Direction="0" Color="White" BlurRadius="20" Opacity="1"/>
-                                                                        </Setter.Value>
-                                                                    </Setter>
-                                                                </DataTrigger>
-                                                                <DataTrigger  Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                <DataTrigger  Binding="{Binding Path=IsSelected}" Value="True">
                                                                     <Setter Property="Background">
                                                                         <Setter.Value>
                                                                             <ImageBrush Stretch="UniformToFill"  ImageSource="UI/GeneralSelectedState.png"/>
@@ -121,6 +114,13 @@
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
                                                                 <Style.Triggers>
+                                                                    <DataTrigger  Binding="{Binding Path=IsSelected}" Value="True">
+                                                                        <Setter Property="Effect">
+                                                                            <Setter.Value>
+                                                                                <DropShadowEffect Direction="0" Color="White" BlurRadius="20" Opacity="1"/>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
                                                                     <DataTrigger Binding="{Binding Path=IsAvailebleToSelect, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
                                                                         <Setter Property="Foreground" Value="DimGray"/>
                                                                     </DataTrigger>
@@ -153,11 +153,11 @@
                         <ColumnDefinition Width="16*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Grid.ColumnSpan="2" Margin="10,226,10,225"></Button>
-                    <local:CardPresenterPage Command="{Binding CardClickedCommand}" CardSource="{Binding DisplayedCardViewModels}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Button Command="{Binding ListLeft}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Grid.ColumnSpan="2" Margin="10,226,10,225"></Button>
+                    <local:CardPresenterPage Command="{Binding CardClickedCommand}" CardSource="{Binding DisplayedCardViewModels, Mode=TwoWay}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
                     </local:CardPresenterPage>
-                    <Button Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="10,226,10,225"></Button>
+                    <Button Command="{Binding ListRight}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="10,226,10,225"></Button>
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">

@@ -65,7 +65,7 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 
         public bool Equals(CardGeneral other)
         {
-            return this.Name == other.Name;
+            return other!= null && this.Name == other.Name;
         }
     }
 }

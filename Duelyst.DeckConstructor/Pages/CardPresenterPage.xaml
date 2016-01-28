@@ -18,13 +18,13 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <local:SinglecardView x:Name="V00" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="0"/>
-        <local:SinglecardView x:Name="V01" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="1"/>
-        <local:SinglecardView x:Name="V02" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="2"/>
-        <local:SinglecardView x:Name="V03" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="3"/>
-        <local:SinglecardView x:Name="V10" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="0"/>
-        <local:SinglecardView x:Name="V11" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="1"/>
-        <local:SinglecardView x:Name="V12" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="2"/>
-        <local:SinglecardView x:Name="V13" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="3"/>
+        <local:SinglecardView VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="V00" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="0"/>
+        <local:SinglecardView VerticalAlignment="Stretch"  HorizontalAlignment="Stretch"  x:Name="V01" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="1"/>
+        <local:SinglecardView VerticalAlignment="Stretch"  HorizontalAlignment="Stretch"  x:Name="V02" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="2"/>
+        <local:SinglecardView VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  x:Name="V03" CardClickedHandler="OnCardClickedHandler" Grid.Row="0" Grid.Column="3"/>
+        <local:SinglecardView VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  x:Name="V10" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="0"/>
+        <local:SinglecardView VerticalAlignment="Stretch"  HorizontalAlignment="Stretch"  x:Name="V11" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="1"/>
+        <local:SinglecardView VerticalAlignment="Stretch"  HorizontalAlignment="Stretch"  x:Name="V12" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="2"/>
+        <local:SinglecardView VerticalAlignment="Stretch"  HorizontalAlignment="Stretch"  x:Name="V13" CardClickedHandler="OnCardClickedHandler" Grid.Row="1" Grid.Column="3"/>
     </Grid>
 </UserControl>
