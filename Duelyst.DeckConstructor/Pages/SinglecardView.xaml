@@ -20,7 +20,20 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>-->
-        <Image MouseUp="CardImage_OnMouseUp" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform"  Margin="5,5,5,5" Grid.Row="0" Name="CardImage">
+        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform"  Margin="5,5,5,5" Grid.Row="0" Name="CardImage">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1.08" ScaleY="1.08"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
             <Image.Effect>
                 <DropShadowEffect Direction="-20" ShadowDepth="5" BlurRadius="10" Color="Black" Opacity="80" />
             </Image.Effect>
