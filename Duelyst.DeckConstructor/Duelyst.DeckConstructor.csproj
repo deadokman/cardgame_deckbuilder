@@ -110,6 +110,7 @@
     <Compile Include="CardCatalog\CardsCatalog.cs" />
     <Compile Include="CardCatalog\ECardRarity.cs" />
     <Compile Include="CardCatalog\ECardType.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ForegroudTemple.xaml.cs">
       <DependentUpon>ForegroudTemple.xaml</DependentUpon>
     </Compile>
@@ -140,12 +141,14 @@
     <Compile Include="ViewModel\Communication\NavigationMessage.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardGeneral.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardItemViewModelBase.cs" />
+    <Compile Include="ViewModel\DeckCardItem\CardListItemViewModelBase.cs" />
     <Compile Include="ViewModel\DeckConstructorViewModel.cs" />
     <Compile Include="ViewModel\Ifaces\IResizeableViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\AppBackgroundPageViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ResizableViewModelBase.cs" />
+    <Compile Include="ViewModel\SquadManagerViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="ForegroudTemple.xaml">
       <SubType>Designer</SubType>
@@ -277,6 +280,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\UI\button_primary_glow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -78,7 +78,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0">
-                    <TextBlock Style="{StaticResource mmtextStyle}" Text="НОВЫЙ ОТРЯД">
+                    <TextBlock Style="{StaticResource mmtextStyle}" Text="КОЛЛЕКЦИЯ">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding NewDeckCommand}" MouseAction="LeftClick" />
                         </TextBlock.InputBindings>

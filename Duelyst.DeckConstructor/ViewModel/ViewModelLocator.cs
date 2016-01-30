@@ -48,6 +48,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             SimpleIoc.Default.Register<AppBackgroundPageViewModel>();
             SimpleIoc.Default.Register<MenuViewModel>();
             SimpleIoc.Default.Register<DeckConstructorViewModel>();
+            SimpleIoc.Default.Register<SquadManagerViewModel>();
         }
 
         public MainViewModel Main
@@ -74,6 +75,14 @@ namespace Duelyst.DeckConstructor.ViewModel
         public MenuViewModel MenuMain
         {
             get { return ServiceLocator.Current.GetInstance<MenuViewModel>(); }
+        }
+
+        public SquadManagerViewModel SquadBuilderListViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SquadManagerViewModel>();
+            }
         }
 
         public static void Cleanup()

@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardItemViewModelBase : ViewModelBase
+    public class CardItemViewModelBase : CardListItemViewModelBase
     {
         public CardItemViewModelBase(string name)
         {
@@ -16,13 +16,6 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             AlreadyAdded = 0;
         }
 
-        /// <summary>
-        /// Стоимость 
-        /// </summary>
-        public int ManaCost { get; set; }
-
-        public string Name { get; set; }
-
         public void SetImage(BitmapImage source)
         {
             if (source != null)
@@ -31,11 +24,7 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             }   
         }
 
-        public BitmapImage Image { get; private set; }
-
         public int MaxInDeck { get; set; }
-
-        public int AlreadyAdded { get; set; }
 
         public ECardType CardType { get; set; }
 

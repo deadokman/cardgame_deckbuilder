@@ -15,6 +15,25 @@
       SizeChanged="DeckConstructorSpellBook_OnSizeChanged">
     <Page.Resources>
         <ResourceDictionary>
+            <Style x:Key="NewSquadButtom" TargetType="Image">
+                <Setter Property="Source" Value="UI/button_primary_glow.png"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseCaptured" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <TranslateTransform X="25"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect ShadowDepth="0" Color="Aqua"  Opacity="19" BlurRadius="14"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
             <Style x:Key="BackButtonStyle" TargetType="Image">
                 <Setter Property="Source" Value="UI/button_back@2x.png"/>
                 <Style.Triggers>
@@ -154,65 +173,36 @@
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <Button Command="{Binding ListLeft}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Grid.ColumnSpan="2" Margin="10,226,10,225"></Button>
+                    <!--Контролл отображения карт-->
                     <local:CardPresenterPage Command="{Binding CardClickedCommand}" CardSource="{Binding DisplayedCardViewModels, Mode=TwoWay}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
                     </local:CardPresenterPage>
                     <Button Command="{Binding ListRight}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="10,226,10,225"></Button>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1">
+            <!--Колонка для конструктора отряда с собственным контекстом-->
+            <Grid DataContext="{Binding Source={StaticResource Locator}, Path=SquadBuilderListViewModel}" Grid.Column="1">
                 <Grid.Background>
                     <ImageBrush Stretch="UniformToFill" ImageSource="UI/BuildedSquadList.png" />
                 </Grid.Background>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition Height=".4*"/>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition Height=".1*"/>
-                    <RowDefinition Height=".1*"/>
+                    <!--Строка наименования отряда-->
+                    <RowDefinition Height="Auto"/>
+                    <!--Строка графика и комбинаций карт-->
+                    <RowDefinition Height="Auto"/>
+                    <!--Строка со списком имеющихся отрядов или же со списком карт в отрядке-->
+                    <RowDefinition Height="Auto"/>
+                    <!--Строка с кнопкой создания или удания отряда-->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!--Строка с экспорта отряда в изоборажение или же файл-->
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBox Margin="1,1,1,1" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
-                <!--<sparrow:SparrowChart Margin="5,5,5,5" BorderThickness="0"  BorderBrush="Black" Grid.Row="1" 
-                                      HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Foreground="White" >
-                    <sparrow:SparrowChart.XAxis>
-                        <sparrow:LinearXAxis Visibility="Collapsed"/>
-                    </sparrow:SparrowChart.XAxis>
-                    <sparrow:SparrowChart.YAxis>
-                        <sparrow:LinearYAxis Visibility="Collapsed"/>
-                    </sparrow:SparrowChart.YAxis>
-                    <sparrow:ColumnSeries Fill="DeepSkyBlue"  StrokeThickness="0">
-                        <sparrow:ColumnSeries.Effect>
-                            <DropShadowEffect ShadowDepth="0" Color="DeepSkyBlue" Opacity="19" BlurRadius="1"/>
-                        </sparrow:ColumnSeries.Effect>
-                        <sparrow:ColumnSeries.Points>
-                            <sparrow:DoublePoint Data="0" Value="1"/>
-                            <sparrow:DoublePoint Data="1" Value="2"/>
-                            <sparrow:DoublePoint Data="2" Value="3"/>
-                            <sparrow:DoublePoint Data="3" Value="4"/>
-                            <sparrow:DoublePoint Data="4" Value="5"/>
-                            <sparrow:DoublePoint Data="5" Value="6"/>
-                            <sparrow:DoublePoint Data="6" Value="7"/>
-                            <sparrow:DoublePoint Data="7" Value="8"/>
-                            <sparrow:DoublePoint Data="8" Value="9"/>
-                            <sparrow:DoublePoint Data="9" Value="10"/>
-                            <sparrow:DoublePoint Data="10" Value="11"/>
-                        </sparrow:ColumnSeries.Points>
-                    </sparrow:ColumnSeries>
-                </sparrow:SparrowChart>-->
-                <!--<metroChart:StackedBar100Chart Style="{StaticResource ChartStyleMinimalSize}"  Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                ChartTitleVisibility="Collapsed" ChartLegendVisibility="Collapsed" Foreground="DodgerBlue"  Background="Transparent">
-                    <metroChart:StackedBar100Chart.Series >
-                        <metroChart:ChartSeries
-                            SeriesTitle="dep"
-                        DisplayMember="ManaCost"
-                        ValueMember="Count"
-                        ItemsSource="{Binding ChartCardInfoCollection}">
-                        </metroChart:ChartSeries>
-                    </metroChart:StackedBar100Chart.Series>
-                </metroChart:StackedBar100Chart>-->
-                <DockPanel Grid.Row="2"></DockPanel>
+                <TextBox Visibility="{Binding CardCollectionMode, Converter=}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
+                <DockPanel Grid.Row="1"></DockPanel>
                 <!--Лист с картами по подготовленному шаблоу-->
-                <ListView ItemsSource="{Binding DeckCardItems}" Background="Transparent" Grid.Row="3">
+                <ListView Grid.Row="2" ItemsSource="{Binding CardListItems}" Background="Transparent">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid ClipToBounds="True">
@@ -231,7 +221,25 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <DockPanel Grid.Row="4">
+                <!--Описание кнопки создания нового отряда-->
+                <Button Grid.Row="3">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Grid ClipToBounds="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Canvas HorizontalAlignment="Center" ZIndex="1" Margin="4,4,4,4" Height="50" Grid.Row="0">
+                                    <TextBlock Margin="-25,10,0,4" FontSize="20" HorizontalAlignment="Center"  Text="Новый"/>
+                                </Canvas>
+                                <Canvas HorizontalAlignment="Center"  ZIndex="0" Margin="4,4,4,4" Height="50" Grid.Row="0">
+                                    <Image Margin="-75,0" Style="{Binding Source={StaticResource NewSquadButtom}}"/>
+                                </Canvas>
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <DockPanel Grid.Row="6">
                     <Button />
                 </DockPanel>
             </Grid>

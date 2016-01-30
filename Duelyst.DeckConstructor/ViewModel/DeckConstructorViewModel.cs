@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Documents;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
