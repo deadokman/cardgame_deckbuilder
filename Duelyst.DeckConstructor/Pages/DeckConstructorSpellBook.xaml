@@ -8,6 +8,7 @@
       xmlns:sparrow="http://sparrowtoolkit.codeplex.com/wpf"
       xmlns:metroChart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:converters="clr-namespace:Duelyst.DeckConstructor.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="800"
       Title="DeckConstructorSpellBook" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
@@ -15,6 +16,7 @@
       SizeChanged="DeckConstructorSpellBook_OnSizeChanged">
     <Page.Resources>
         <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="btvConverter"/>
             <Style x:Key="NewSquadButtom" TargetType="Image">
                 <Setter Property="Source" Value="UI/button_primary_glow.png"/>
                 <Style.Triggers>
@@ -199,8 +201,8 @@
                     <!--Строка с экспорта отряда в изоборажение или же файл-->
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBox Visibility="{Binding CardCollectionMode, Converter=}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
-                <DockPanel Grid.Row="1"></DockPanel>
+                <TextBox Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
+                <DockPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="1"></DockPanel>
                 <!--Лист с картами по подготовленному шаблоу-->
                 <ListView Grid.Row="2" ItemsSource="{Binding CardListItems}" Background="Transparent">
                     <ListView.ItemTemplate>
@@ -222,7 +224,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <!--Описание кнопки создания нового отряда-->
-                <Button Grid.Row="3">
+                <Button Command="{Binding NewSquadCommand}" Grid.Row="3" Visibility="{Binding CardCollectionMode, Converter={StaticResource btvConverter}}">
                     <Button.Template>
                         <ControlTemplate>
                             <Grid ClipToBounds="True">
@@ -239,7 +241,25 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <DockPanel Grid.Row="6">
+                <!--Описание кнопки создания нового отряда-->
+                <Button Command="{Binding NewSquadCommand}" Grid.Row="3" Visibility="{Binding CardCollectionMode, Converter={StaticResource btvConverter}}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Grid ClipToBounds="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Canvas HorizontalAlignment="Center" ZIndex="1" Margin="4,4,4,4" Height="50" Grid.Row="0">
+                                    <TextBlock Margin="-25,10,0,4" FontSize="20" HorizontalAlignment="Center"  Text="Новый"/>
+                                </Canvas>
+                                <Canvas HorizontalAlignment="Center"  ZIndex="0" Margin="4,4,4,4" Height="50" Grid.Row="0">
+                                    <Image Margin="-75,0" Style="{Binding Source={StaticResource NewSquadButtom}}"/>
+                                </Canvas>
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <DockPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="6">
                     <Button />
                 </DockPanel>
             </Grid>
