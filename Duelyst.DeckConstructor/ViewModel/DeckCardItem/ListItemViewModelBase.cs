@@ -8,7 +8,7 @@ using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardListItemViewModelBase : ViewModelBase
+    public class ListItemViewModelBase : ViewModelBase
     {
         public BitmapImage Image { get; protected set; }
 

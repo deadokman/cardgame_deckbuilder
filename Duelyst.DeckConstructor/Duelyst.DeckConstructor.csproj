@@ -107,9 +107,12 @@
     </ApplicationDefinition>
     <Compile Include="CardCatalog\CardDtoItem.cs" />
     <Compile Include="CardCatalog\CardGeneralDto.cs" />
-    <Compile Include="CardCatalog\CardsCatalog.cs" />
+    <Compile Include="CardCatalog\Catalog.cs" />
     <Compile Include="CardCatalog\ECardRarity.cs" />
     <Compile Include="CardCatalog\ECardType.cs" />
+    <Compile Include="CardCatalog\Squad\Squad.cs" />
+    <Compile Include="CardCatalog\Squad\SquadBuildError.cs" />
+    <Compile Include="CardCatalog\Squad\SquadManager.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ForegroudTemple.xaml.cs">
       <DependentUpon>ForegroudTemple.xaml</DependentUpon>
@@ -136,12 +139,13 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="VectorCalcs\VectorMath.cs" />
     <Compile Include="ViewModel\ChartBarCardInfo.cs" />
+    <Compile Include="ViewModel\Communication\CardClickMessage.cs" />
     <Compile Include="ViewModel\Communication\CardDisplayMessage.cs" />
     <Compile Include="ViewModel\Communication\CommEventType.cs" />
     <Compile Include="ViewModel\Communication\NavigationMessage.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardGeneral.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardItemViewModelBase.cs" />
-    <Compile Include="ViewModel\DeckCardItem\CardListItemViewModelBase.cs" />
+    <Compile Include="ViewModel\DeckCardItem\ListItemViewModelBase.cs" />
     <Compile Include="ViewModel\DeckConstructorViewModel.cs" />
     <Compile Include="ViewModel\Ifaces\IResizeableViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />

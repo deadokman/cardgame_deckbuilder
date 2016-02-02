@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
-using GalaSoft.MvvmLight;
+using System.Linq;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
@@ -13,7 +12,7 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
         public CardGeneral(string name)
             : base(name)
         {
-            CardViewModels = new List<CardItemViewModelBase>();
+            CardViewModelsDictionary = new Dictionary<string, CardItemViewModelBase>();
         }
 
         public delegate void GeneralSelectionChanged(CardGeneral general);
@@ -28,10 +27,26 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             }
         }
 
+        public void AddCard(CardItemViewModelBase item)
+        {
+            if (CardViewModelsDictionary.ContainsKey(item.CardId))
+            {
+                throw new ArgumentException(
+                    $"Карта с идентфикатором {item.CardId} уже добавлена к списку подчиненных генералу");
+            }
+
+            CardViewModelsDictionary.Add(item.CardId, item);
+        }
+
+        public CardItemViewModelBase[] CardViewModels
+        {
+            get { return CardViewModelsDictionary.Select(pair => pair.Value).ToArray(); }
+        }
+
         /// <summary>
         /// Cписок подчиненных генералу карт
         /// </summary>
-        public List<CardItemViewModelBase> CardViewModels { get; set; }
+        private Dictionary<string, CardItemViewModelBase> CardViewModelsDictionary { get; set; }
 
         /// <summary>
         /// Генерал доступен для выбора

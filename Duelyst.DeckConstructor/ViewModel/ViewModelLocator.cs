@@ -43,7 +43,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             ////    // Create run time view services and models
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
-            var initial = CardsCatalog.Instance;
+            var initial = Catalog.Instance;
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<AppBackgroundPageViewModel>();
             SimpleIoc.Default.Register<MenuViewModel>();

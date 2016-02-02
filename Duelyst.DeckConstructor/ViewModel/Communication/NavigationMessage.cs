@@ -6,6 +6,7 @@
         {
             CommMsgType = type;
         }
+
         public CommEventType CommMsgType { get; protected set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -15,12 +16,13 @@ namespace Duelyst.DeckConstructor.ViewModel
     {
         public SquadManagerViewModel()
         {
-            CardListItems = new ObservableCollection<CardListItemViewModelBase>();
+            CardListItems = new ObservableCollection<ListItemViewModelBase>();
             CardCollectionMode = true;
             NewSquadCommand = new RelayCommand(EnterSquadBuilderMode);
+            MessengerInstance.Register(this, (CardClickMessage m) => ReciveCardClick(m));
         }
 
-        public ObservableCollection<CardListItemViewModelBase> CardListItems { get; set; }
+        public ObservableCollection<ListItemViewModelBase> CardListItems { get; set; }
 
         /// <summary>
         /// Команда переводящая вью модель в режим построение отряда
@@ -30,7 +32,11 @@ namespace Duelyst.DeckConstructor.ViewModel
         private void EnterSquadBuilderMode()
         {
             CardCollectionMode = false;
+        }
 
+        public void ReciveCardClick(CardClickMessage message)
+        {
+            
         }
 
         private void BuildSquadCollectionItems()

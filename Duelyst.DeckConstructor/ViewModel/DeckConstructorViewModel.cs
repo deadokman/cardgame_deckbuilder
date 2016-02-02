@@ -13,7 +13,7 @@ namespace Duelyst.DeckConstructor.ViewModel
     {
         public DeckConstructorViewModel()
         {
-            Catalog = CardsCatalog.Instance;
+            Catalog = CardCatalog.Catalog.Instance;
             InitCardChartInfoCollection();
             DeckCardItems = new ObservableCollection<CardItemViewModelBase>();
             Generals = new ObservableCollection<CardGeneral>(Catalog.ViewModelGenerals);
@@ -29,7 +29,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// <summary>
         /// Каталог с полным набором карт
         /// </summary>
-        public CardsCatalog Catalog;
+        public Catalog Catalog;
 
         /// <summary>
         /// Максимальное количество карт отображаемое на странице
@@ -109,7 +109,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             Generals.Where(g => !g.Equals(SelectedGeneral))
                 .ToList().ForEach(g=> g.IsSelected = false);
             _pagesForGeneral =
-                Convert.ToInt32(Math.Ceiling((double) (SelectedGeneral.CardViewModels.Count/MaxCardDiplayCount)));
+                Convert.ToInt32(Math.Ceiling((double) (SelectedGeneral.CardViewModels.Length/MaxCardDiplayCount)));
             CurrentPage = 0;
         }
 

@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardItemViewModelBase : CardListItemViewModelBase
+    public class CardItemViewModelBase : ListItemViewModelBase
     {
         public CardItemViewModelBase(string name)
         {
@@ -23,6 +23,8 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
                 Image = source;
             }   
         }
+
+        public string CardId { get; set; }
 
         public int MaxInDeck { get; set; }
 

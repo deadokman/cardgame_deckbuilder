@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
@@ -12,7 +13,7 @@ namespace Duelyst.DeckConstructor.CardCatalog
     /// <summary>
     /// Каталог с картами (SingleInstance)
     /// </summary>
-    public class CardsCatalog
+    public class Catalog
     {
         #region Основные свойства
 
@@ -49,13 +50,13 @@ namespace Duelyst.DeckConstructor.CardCatalog
         /// <summary>
         /// Получение инстанса  класса
         /// </summary>
-        public static CardsCatalog Instance
+        public static Catalog Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new CardsCatalog();
+                    _instance = new Catalog();
                     _instance.InitData();
                 }
 
@@ -63,11 +64,23 @@ namespace Duelyst.DeckConstructor.CardCatalog
             }
             
         }
-        private static CardsCatalog _instance;
+        private static Catalog _instance;
 
         #endregion
 
-        public List<CardGeneral> ViewModelGenerals; 
+        private int _cardIndexer = 0;
+
+        public CardGeneral[] ViewModelGenerals { get { return _viewModelGeneralsDict.Select(i => i.Value).ToArray(); } }
+
+        /// <summary>
+        /// Список доступных генералов
+        /// </summary>
+        private Dictionary<string, CardGeneral> _viewModelGeneralsDict;
+
+        /// <summary>
+        /// Плоский список с картами
+        /// </summary>
+        private SortedList<string, CardItemViewModelBase> _flatCardList; 
 
         /// <summary>
         /// Инициализация каталога с картами
@@ -111,10 +124,11 @@ namespace Duelyst.DeckConstructor.CardCatalog
 #endif
         }
 
-        private CardsCatalog()
+        private Catalog()
         {
             _imageCollection = new Dictionary<string, BitmapImage>();
-            ViewModelGenerals = new List<CardGeneral>();
+            _viewModelGeneralsDict = new Dictionary<string, CardGeneral>();
+            _flatCardList= new SortedList<string, CardItemViewModelBase>();
             try
             {
                 //Прикол с инициализацией данного варианта конструктора из-за IL инъекций кода внутри класса
@@ -157,10 +171,36 @@ namespace Duelyst.DeckConstructor.CardCatalog
             {
                 cardType = ECardType.None;
             }
-            producedType.CardType = cardType;
 
+            producedType.CardType = cardType;
+            if (String.IsNullOrEmpty(dto.Id))
+            {
+                producedType.CardId = _cardIndexer.ToString();
+                _cardIndexer++;
+            }
+
+            _flatCardList.Add(producedType.CardId, producedType);
             return producedType;
         } 
+
+        /// <summary>
+        /// Индексатор класса для получения генерала
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public CardItemViewModelBase this[string id]
+        {
+            get
+            {
+                CardItemViewModelBase card;
+                if(_flatCardList.TryGetValue(id, out card))
+                {
+                    return card;
+                }
+
+                return null;
+            }
+        }
 
         private void BuildCatalog()
         {
@@ -168,10 +208,10 @@ namespace Duelyst.DeckConstructor.CardCatalog
             {
                 var root = GetVimodelWithImage(() => new CardGeneral(general.Name), general);
                 //Установить картинку     
-                ViewModelGenerals.Add(root);
+                _viewModelGeneralsDict.Add(root.CardId, root);
                 foreach (var cardDtoItem in general.Cards)
                 {
-                    root.CardViewModels.Add(GetVimodelWithImage(
+                    root.AddCard(GetVimodelWithImage(
                         () => new CardItemViewModelBase(cardDtoItem.Name), cardDtoItem));
                 }
             }

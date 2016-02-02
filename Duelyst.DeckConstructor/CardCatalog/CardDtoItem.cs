@@ -15,6 +15,13 @@ namespace Duelyst.DeckConstructor.CardCatalog
     public class CardDtoItem
     {
         /// <summary>
+        /// Идентификатор карты в каталоге
+        /// </summary>
+        [DataMember]
+        [XmlAttribute]
+        public string Id { get; set; }
+
+        /// <summary>
         /// Название карты
         /// </summary>
         [DataMember]
