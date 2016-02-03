@@ -106,10 +106,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CardCatalog\CardDtoItem.cs" />
+    <Compile Include="CardCatalog\CardViewModelFactory.cs" />
     <Compile Include="CardCatalog\CardGeneralDto.cs" />
     <Compile Include="CardCatalog\Catalog.cs" />
     <Compile Include="CardCatalog\ECardRarity.cs" />
     <Compile Include="CardCatalog\ECardType.cs" />
+    <Compile Include="CardCatalog\Provider\ICardProvider.cs" />
+    <Compile Include="CardCatalog\Provider\LocalCardDataProvider.cs" />
     <Compile Include="CardCatalog\Squad\Squad.cs" />
     <Compile Include="CardCatalog\Squad\SquadBuildError.cs" />
     <Compile Include="CardCatalog\Squad\SquadManager.cs" />

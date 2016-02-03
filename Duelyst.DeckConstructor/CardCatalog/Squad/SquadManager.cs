@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Xml.Serialization;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 
@@ -17,23 +16,51 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// <summary>
         /// Список имеющихся отрядов
         /// </summary>
-        private Dictionary<string, Squad> _squads;
+        private Dictionary<string, Squad> _squads; 
 
-        private Func<string, CardItemViewModelBase> _getCatdDelegate;
-
+        /// <summary>
+        /// Серриализатор отряда
+        /// </summary>
         private XmlSerializer _squadSeri;
 
-        public SquadManager(Func<string, CardItemViewModelBase> getCardDelegate)
-        {
-            _getCatdDelegate = getCardDelegate;
-            _squads = new Dictionary<string, Squad>();
+        /// <summary>
+        /// Экземпляр каталога для класа
+        /// </summary>
+        private Catalog _catalog;
 
+        public static SquadManager Instance
+        {
+            get { return _instance == null ? _instance = new SquadManager() : _instance; }
+        }
+
+        private static SquadManager _instance;
+
+        private SquadManager()
+        {
+            _squads = new Dictionary<string, Squad>();
+            _catalog = Catalog.Instance;
+            InitializeSquads();
         }
 
         public void InitializeSquads()
         {
-            _squadSeri = new XmlSerializer(typeof(Squad), String.Empty);
+            try
+            {
+                //Прикол с инициализацией данного варианта конструктора из-за IL инъекций кода внутри класса
+                //что приводит к CLR ошибки не влияющей в конечном счете на работу экземпляра. Microsoft sucks!
+                //http://stackoverflow.com/questions/3494886/filenotfoundexception-in-applicationsettingsbase
+                _squadSeri = new XmlSerializer(typeof(Squad), String.Empty);
+            }
+            catch (Exception)
+            {
+            }
+
             var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SquadFolderName));
+            if (!dir.Exists)
+            {
+                return;
+            }
+
             var files = dir.GetFiles("*.xml");
             foreach (var fileInfo in files)
             {
@@ -43,23 +70,25 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                     {
                         var squad = (Squad)_squadSeri.Deserialize(stream);
                         _squads.Add(squad.SquadName, squad);
+                        foreach (var card in squad.CardSquadCount)
+                        {
+                            squad.TryAddCard(_catalog[card.Key]);
+                        }
+
                     }
                     catch (Exception ex)
                     {
-                        
+                        //TODO: Придумать что-то для процессинга ошибок
                     }
                 }
             }
-            //Инициализировать состав отряда
-            foreach (var squad in _squads)
-            {
-                squad.Value.InitCards(_getCatdDelegate);
-            }
         }
 
-        public void InitNewSquad(CardGeneral general)
+        public Squad InitNewSquad(CardGeneral general)
         {
-            
+            var squad = new Squad();
+            squad.SquadOwner = general;
+            return squad;
         }
     }
 }

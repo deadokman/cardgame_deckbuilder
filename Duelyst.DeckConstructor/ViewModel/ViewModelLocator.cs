@@ -13,17 +13,12 @@
 */
 
 using Duelyst.DeckConstructor.CardCatalog;
-
-using GalaSoft.MvvmLight;
+using Duelyst.DeckConstructor.CardCatalog.Provider;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
-    /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
-    /// </summary>
     public class ViewModelLocator
     {
         /// <summary>
@@ -31,24 +26,13 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// </summary>
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
             var initial = Catalog.Instance;
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<AppBackgroundPageViewModel>();
             SimpleIoc.Default.Register<MenuViewModel>();
             SimpleIoc.Default.Register<DeckConstructorViewModel>();
             SimpleIoc.Default.Register<SquadManagerViewModel>();
+
         }
 
         public MainViewModel Main
@@ -87,7 +71,7 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         public static void Cleanup()
         {
-            // TODO Clear the ViewModels
+
         }
     }
 }

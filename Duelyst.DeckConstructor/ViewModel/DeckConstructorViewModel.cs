@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog;
+using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -13,7 +14,7 @@ namespace Duelyst.DeckConstructor.ViewModel
     {
         public DeckConstructorViewModel()
         {
-            Catalog = CardCatalog.Catalog.Instance;
+            Catalog = Catalog.Instance;
             InitCardChartInfoCollection();
             DeckCardItems = new ObservableCollection<CardItemViewModelBase>();
             Generals = new ObservableCollection<CardGeneral>(Catalog.ViewModelGenerals);
@@ -23,8 +24,6 @@ namespace Duelyst.DeckConstructor.ViewModel
             ListLeft = new RelayCommand(OnCardListLeftCallback);
             InitData();
         }
-
-        private ICommand _cardClickedCommand;
 
         /// <summary>
         /// Каталог с полным набором карт
@@ -103,6 +102,11 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Реакция на смену фильтра генерала
+        /// </summary>
+        /// <param name="general"></param>
         private void OnGeneralSelectionChanged(CardGeneral general)
         {
             //Отключить выделение у всех остальных генералов
@@ -129,16 +133,16 @@ namespace Duelyst.DeckConstructor.ViewModel
             DisplayedCardViewModels = selecCardGeneral.CardViewModels.Skip(firstIdx).Take(cardOnPage).ToList();
         }
 
+        /// <summary>
+        /// Реакция на клик по карте
+        /// </summary>
+        /// <param name="item"></param>
         private void OnCardClicked(CardItemViewModelBase item)
         {
-            //Произвести добавление карты в колоду            
+           MessengerInstance.Send<CardClickMessage>(new CardClickMessage(item));           
         }
 
-        public ICommand CardClickedCommand
-        {
-            get { return _cardClickedCommand; }
-            set { _cardClickedCommand = value; }
-        }
+        public ICommand CardClickedCommand { get; set; }
 
         /// <summary>
         /// Карты добавленные в колоду

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Duelyst.DeckConstructor.CardCatalog;
-using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardItemViewModelBase : ListItemViewModelBase
+    public class CardItemViewModelBase : ListItemViewModelBase, IEquatable<CardItemViewModelBase>
     {
         public CardItemViewModelBase(string name)
         {
@@ -24,6 +22,8 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             }   
         }
 
+        public CardItemViewModelBase Owner { get; set; }
+
         public string CardId { get; set; }
 
         public int MaxInDeck { get; set; }
@@ -31,5 +31,9 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
         public ECardType CardType { get; set; }
 
 
+        public bool Equals(CardItemViewModelBase other)
+        {
+            return other != null && other.CardId == CardId;
+        }
     }
 }

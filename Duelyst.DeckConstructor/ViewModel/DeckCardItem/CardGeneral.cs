@@ -35,6 +35,7 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
                     $"Карта с идентфикатором {item.CardId} уже добавлена к списку подчиненных генералу");
             }
 
+            item.Owner = this;
             CardViewModelsDictionary.Add(item.CardId, item);
         }
 

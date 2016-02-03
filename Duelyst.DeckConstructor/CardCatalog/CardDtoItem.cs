@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Duelyst.DeckConstructor.CardCatalog
 {
     /// <summary>
-    /// Дессиреализуемый объект карты
+    /// Дессиреализуемый объект карты (для хранения в XML или передачи по сети)
     /// </summary>
     [Serializable]
     public class CardDtoItem
