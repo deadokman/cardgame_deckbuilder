@@ -71,9 +71,14 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// <param name="card">Новая карта</param>
         public bool TryAddCard(CardItemViewModelBase card)
         {
-            if (!card.Owner.Equals(SquadOwner))
+
+            if (card.Owner != null && !card.Owner.Equals(SquadOwner))
             {
                 return false;
+            }
+            else if (card.Owner == null)
+            {
+                //TODO: PROCESS
             }
 
             int squadCount = 1;

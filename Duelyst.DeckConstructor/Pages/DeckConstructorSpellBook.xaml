@@ -174,12 +174,12 @@
                         <ColumnDefinition Width="16*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Command="{Binding ListLeft}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Grid.ColumnSpan="2" Margin="10,226,10,225"></Button>
+                    <Button Command="{Binding ListLeft}" IsEnabled="{Binding NavigationButtonsEnabled}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Grid.ColumnSpan="2" Margin="10,226,10,225"></Button>
                     <!--Контролл отображения карт-->
                     <local:CardPresenterPage Command="{Binding CardClickedCommand}" CardSource="{Binding DisplayedCardViewModels, Mode=TwoWay}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
                     </local:CardPresenterPage>
-                    <Button Command="{Binding ListRight}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="10,226,10,225"></Button>
+                    <Button Command="{Binding ListRight}" IsEnabled="{Binding NavigationButtonsEnabled}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="10,226,10,225"></Button>
                 </Grid>
             </Grid>
             <!--Колонка для конструктора отряда с собственным контекстом-->

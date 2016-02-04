@@ -27,11 +27,11 @@ namespace Duelyst.DeckConstructor.Pages
         "CardSource",
         typeof(IList<CardItemViewModelBase>), typeof(CardPresenterPage), new PropertyMetadata(null, InitCardData));
 
-        public ObservableCollection<CardItemViewModelBase> CardSource
+        public List<CardItemViewModelBase> CardSource
         {
             get
             {
-                return (ObservableCollection<CardItemViewModelBase>)GetValue(cardDeckcountProperty);
+                return (List<CardItemViewModelBase>)GetValue(cardDeckcountProperty);
             }
             set
             {

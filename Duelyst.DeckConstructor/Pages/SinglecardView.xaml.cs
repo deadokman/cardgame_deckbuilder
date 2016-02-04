@@ -19,7 +19,7 @@ namespace Duelyst.DeckConstructor.Pages
         // Статическое свойство только для чтения DependencyProperty.
         private static DependencyProperty imageSourceProperty =
                 DependencyProperty.Register(
-                "CardSource",
+                "CardImageSource",
                 typeof(BitmapImage), typeof(SinglecardView));
 
         private static DependencyProperty cardDeckcountProperty = DependencyProperty.Register(
@@ -40,7 +40,7 @@ namespace Duelyst.DeckConstructor.Pages
             }
         }
 
-        public BitmapImage CardSource
+        public BitmapImage CardImageSource
         {
             get { return (BitmapImage)GetValue(imageSourceProperty); }
             set

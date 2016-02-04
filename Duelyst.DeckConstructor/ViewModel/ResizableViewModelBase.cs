@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Duelyst.DeckConstructor.ViewModel.Ifaces;
+﻿using Duelyst.DeckConstructor.ViewModel.Ifaces;
 using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel

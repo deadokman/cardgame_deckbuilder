@@ -146,6 +146,7 @@
     <Compile Include="ViewModel\Communication\CardDisplayMessage.cs" />
     <Compile Include="ViewModel\Communication\CommEventType.cs" />
     <Compile Include="ViewModel\Communication\NavigationMessage.cs" />
+    <Compile Include="ViewModel\Communication\SquadBuilderModeType.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardGeneral.cs" />
     <Compile Include="ViewModel\DeckCardItem\CardItemViewModelBase.cs" />
     <Compile Include="ViewModel\DeckCardItem\ListItemViewModelBase.cs" />

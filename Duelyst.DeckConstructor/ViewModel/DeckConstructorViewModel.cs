@@ -22,7 +22,26 @@ namespace Duelyst.DeckConstructor.ViewModel
             CardClickedCommand = new GalaSoft.MvvmLight.Command.RelayCommand<CardItemViewModelBase>(OnCardClicked);
             ListRight = new RelayCommand(OnCardListRightCallback);
             ListLeft = new RelayCommand(OnCardListLeftCallback);
+            MessengerInstance.Register<CardDisplayMessage>(this, OnNavMessageRecive);
+            NavigationButtonsEnabled = true;
             InitData();
+        }
+
+        private void OnNavMessageRecive(CardDisplayMessage message)
+        {
+            switch (message.ModeType)
+            {
+                case SquadBuilderModeType.GeneralSelectMode:
+                    RebuildCardDisplayListToGeneral();
+                    break;
+                default: break;
+            }
+        }
+
+        private void RebuildCardDisplayListToGeneral()
+        {
+            NavigationButtonsEnabled = false;
+            DisplayedCardViewModels = new List<CardItemViewModelBase>(Generals);
         }
 
         /// <summary>
@@ -44,6 +63,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         private int _currentPage;
         private List<CardItemViewModelBase> _displayedCardViewModels;
         private CardGeneral _selectedGeneral;
+        private bool _navigationButtonsEnabled;
 
         /// <summary>
         /// Индекс текущей страницы
@@ -55,6 +75,22 @@ namespace Duelyst.DeckConstructor.ViewModel
             {
                 _currentPage = value;
                 ChangeDisplayCards(value, MaxCardDiplayCount, SelectedGeneral);
+            }
+        }
+
+        /// <summary>
+        /// Активны кнопки навигирования
+        /// </summary>
+        public bool NavigationButtonsEnabled
+        {
+            get
+            {
+                return _navigationButtonsEnabled;
+            }
+            set
+            {
+                _navigationButtonsEnabled = value;
+                RaisePropertyChanged(() => NavigationButtonsEnabled);
             }
         }
 

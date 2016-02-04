@@ -4,6 +4,7 @@
     {
         None,
         NewDeck,
+        SelectSquadLeaderMode,
         Exit,
         MainMenu,
         Load

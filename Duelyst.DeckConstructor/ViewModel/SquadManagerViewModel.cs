@@ -41,6 +41,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         private void EnterSquadBuilderMode()
         {
             CardCollectionMode = false;
+            MessengerInstance.Send(new CardDisplayMessage(SquadBuilderModeType.GeneralSelectMode));
         }
 
         public void ReciveCardClick(CardClickMessage message)
@@ -55,6 +56,8 @@ namespace Duelyst.DeckConstructor.ViewModel
                 if (general != null)
                 {
                     _сurrentBuildingSquad = _squadManager.InitNewSquad(general);
+                    MessengerInstance.Send(new CardDisplayMessage(SquadBuilderModeType.SquadBuildMode));
+                    return;
                 }
 
                 if (_сurrentBuildingSquad == null)
