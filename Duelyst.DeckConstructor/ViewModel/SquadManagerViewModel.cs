@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog.Squad;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
+using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
+using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -15,6 +14,8 @@ namespace Duelyst.DeckConstructor.ViewModel
 {
     public class SquadManagerViewModel : ViewModelBase
     {
+        private Dictionary<ESquadBuilderModeType, IDisplayStrategy> Strategys; 
+
         public SquadManagerViewModel()
         {
             CardListItems = new ObservableCollection<ListItemViewModelBase>();
@@ -22,6 +23,10 @@ namespace Duelyst.DeckConstructor.ViewModel
             NewSquadCommand = new RelayCommand(EnterSquadBuilderMode);
             MessengerInstance.Register(this, (CardClickMessage m) => ReciveCardClick(m));
             _squadManager = SquadManager.Instance;
+            Strategys = new Dictionary<ESquadBuilderModeType, IDisplayStrategy>();
+            Strategys.Add(ESquadBuilderModeType.CollectionMode, new CollectionDisplayStrategy());
+            Strategys.Add(ESquadBuilderModeType.GeneralSelectMode, new GeneralSelectStrategy());
+            MessengerInstance.Send(Strategys[ESquadBuilderModeType.CollectionMode]);
         }
 
         private SquadManager _squadManager;
@@ -41,7 +46,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         private void EnterSquadBuilderMode()
         {
             CardCollectionMode = false;
-            MessengerInstance.Send(new CardDisplayMessage(SquadBuilderModeType.GeneralSelectMode));
+            MessengerInstance.Send(Strategys[ESquadBuilderModeType.GeneralSelectMode]);
         }
 
         public void ReciveCardClick(CardClickMessage message)
@@ -56,7 +61,7 @@ namespace Duelyst.DeckConstructor.ViewModel
                 if (general != null)
                 {
                     _сurrentBuildingSquad = _squadManager.InitNewSquad(general);
-                    MessengerInstance.Send(new CardDisplayMessage(SquadBuilderModeType.SquadBuildMode));
+                    //MessengerInstance.Send(new CardDisplayMessage(ESquadBuilderModeType.SquadBuildMode));
                     return;
                 }
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardGeneral : CardItemViewModelBase, IEquatable<CardGeneral>
+    public class CardGeneral : CardItemViewModelBase, IDisplayableFilter, IEquatable<CardGeneral>
     {
         private bool _isAvailebleToSelect;
         private bool _isSelected;
@@ -13,17 +14,16 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             : base(name)
         {
             CardViewModelsDictionary = new Dictionary<string, CardItemViewModelBase>();
+            IsAvailebleToSelect = true;
         }
 
-        public delegate void GeneralSelectionChanged(CardGeneral general);
-
-        public event GeneralSelectionChanged IAmSelected;
+        public event FilterSelectionChanged Selected;
 
         private void RaiseIamSelected()
         {
-            if (IAmSelected != null)
+            if (Selected != null)
             {
-                IAmSelected(this);
+                Selected(this);
             }
         }
 
@@ -37,6 +37,14 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 
             item.Owner = this;
             CardViewModelsDictionary.Add(item.CardId, item);
+        }
+
+        public IList<IDisplayadble> ChildData
+        {
+            get
+            {
+                return CardViewModelsDictionary.Select(i => i.Value as IDisplayadble).ToList();
+            }
         }
 
         public CardItemViewModelBase[] CardViewModels
@@ -83,5 +91,6 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
         {
             return other!= null && this.Name == other.Name;
         }
+
     }
 }

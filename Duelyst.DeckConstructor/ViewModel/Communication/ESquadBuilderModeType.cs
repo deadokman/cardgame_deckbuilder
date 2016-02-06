@@ -1,6 +1,6 @@
 ﻿namespace Duelyst.DeckConstructor.ViewModel.Communication
 {
-    public enum SquadBuilderModeType
+    public enum ESquadBuilderModeType
     {
         GeneralSelectMode,
         CollectionMode,

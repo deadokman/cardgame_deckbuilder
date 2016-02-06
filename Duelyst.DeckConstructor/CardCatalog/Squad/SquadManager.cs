@@ -74,7 +74,6 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                         {
                             squad.TryAddCard(_catalog[card.Key]);
                         }
-
                     }
                     catch (Exception ex)
                     {

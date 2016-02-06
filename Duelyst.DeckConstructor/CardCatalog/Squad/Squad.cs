@@ -28,7 +28,14 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// </summary>
         [XmlElement]
         [DataMember]
-        public Dictionary<string, int> CardSquadCount { get; set; }
+        public KeyValuePair<string, int>[] CardSquadCountData
+        {
+            get { return CardSquadCount.Select(p => p).ToArray(); }
+            set
+            {
+                CardSquadCount = value.ToDictionary(p => p.Key, p => p.Value);
+            }
+        }
 
         [XmlElement]
         [DataMember]
@@ -37,21 +44,28 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// <summary>
         /// Флаг того, что данный отряд сломан
         /// </summary>
+        [XmlIgnore]
         public bool IsBroken { get; private set; }
+
+        [XmlIgnore]
+        public Dictionary<string, int> CardSquadCount { get; set; }
 
         /// <summary>
         /// Ошибки связанные с потстроением отряда
         /// </summary>
+        [XmlIgnore]
         public List<SquadBuildError> SquadErrors { get; private set; } 
 
         /// <summary>
         /// Владелец отряда
         /// </summary>
+        [XmlIgnore]
         public CardGeneral SquadOwner { get; set; }
 
         /// <summary>
         /// Карты входяие в отряд
         /// </summary>
+        [XmlIgnore]
         public CardItemViewModelBase[] SquadCards
         {
             get

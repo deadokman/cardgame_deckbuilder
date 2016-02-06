@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Media.Imaging;
 using Duelyst.DeckConstructor.CardCatalog;
+using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    public class CardItemViewModelBase : ListItemViewModelBase, IEquatable<CardItemViewModelBase>
+    public class CardItemViewModelBase : ListItemViewModelBase, IDisplayadble, IEquatable<CardItemViewModelBase>
     {
         public CardItemViewModelBase(string name)
         {
@@ -22,6 +23,8 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             }   
         }
 
+        public BitmapImage Image { get; protected set; }
+
         public CardItemViewModelBase Owner { get; set; }
 
         public string CardId { get; set; }
@@ -34,6 +37,12 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
         public bool Equals(CardItemViewModelBase other)
         {
             return other != null && other.CardId == CardId;
+        }
+
+        public bool Equals(IDisplayadble other)
+        {
+            var otherVm = other as CardItemViewModelBase;
+            return otherVm != null && Equals(otherVm);
         }
     }
 }

@@ -6,48 +6,18 @@ using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
+using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 using GalaSoft.MvvmLight.CommandWpf;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
     public class DeckConstructorViewModel : ResizableViewModelBase
     {
-        public DeckConstructorViewModel()
-        {
-            Catalog = Catalog.Instance;
-            InitCardChartInfoCollection();
-            DeckCardItems = new ObservableCollection<CardItemViewModelBase>();
-            Generals = new ObservableCollection<CardGeneral>(Catalog.ViewModelGenerals);
-            DisplayedCardViewModels = new List<CardItemViewModelBase>();
-            CardClickedCommand = new GalaSoft.MvvmLight.Command.RelayCommand<CardItemViewModelBase>(OnCardClicked);
-            ListRight = new RelayCommand(OnCardListRightCallback);
-            ListLeft = new RelayCommand(OnCardListLeftCallback);
-            MessengerInstance.Register<CardDisplayMessage>(this, OnNavMessageRecive);
-            NavigationButtonsEnabled = true;
-            InitData();
-        }
-
-        private void OnNavMessageRecive(CardDisplayMessage message)
-        {
-            switch (message.ModeType)
-            {
-                case SquadBuilderModeType.GeneralSelectMode:
-                    RebuildCardDisplayListToGeneral();
-                    break;
-                default: break;
-            }
-        }
-
-        private void RebuildCardDisplayListToGeneral()
-        {
-            NavigationButtonsEnabled = false;
-            DisplayedCardViewModels = new List<CardItemViewModelBase>(Generals);
-        }
 
         /// <summary>
-        /// Каталог с полным набором карт
+        /// Доступные генералы
         /// </summary>
-        public Catalog Catalog;
+        public ObservableCollection<IDisplayableFilter> CardFilters { get; set; }
 
         /// <summary>
         /// Максимальное количество карт отображаемое на странице
@@ -56,37 +26,16 @@ namespace Duelyst.DeckConstructor.ViewModel
         private const int MaxCardDiplayCount = 8;
 
         /// <summary>
-        /// Количество страниц с картами для генерала
+        /// Каталог с полным набором карт
         /// </summary>
-        private int _pagesForGeneral;
-
-        private int _currentPage;
-        private List<CardItemViewModelBase> _displayedCardViewModels;
-        private CardGeneral _selectedGeneral;
-        private bool _navigationButtonsEnabled;
-
-        /// <summary>
-        /// Индекс текущей страницы
-        /// </summary>
-        private int CurrentPage
-        {
-            get { return _currentPage; }
-            set
-            {
-                _currentPage = value;
-                ChangeDisplayCards(value, MaxCardDiplayCount, SelectedGeneral);
-            }
-        }
+        public Catalog Catalog;
 
         /// <summary>
         /// Активны кнопки навигирования
         /// </summary>
         public bool NavigationButtonsEnabled
         {
-            get
-            {
-                return _navigationButtonsEnabled;
-            }
+            get { return _navigationButtonsEnabled; }
             set
             {
                 _navigationButtonsEnabled = value;
@@ -94,18 +43,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
 
-        /// <summary>
-        /// Текущий выбранный генерал
-        /// </summary>
-        public CardGeneral SelectedGeneral
-        {
-            get { return _selectedGeneral; }
-            private set
-            {
-                _selectedGeneral = value;
-                value.IsSelected = true;
-            }
-        }
+        private bool _navigationButtonsEnabled;
 
         /// <summary>
         /// Пролистнуть список карт в право
@@ -117,90 +55,154 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// </summary>
         public ICommand ListLeft { get; set; }
 
-        public override void Cleanup()
+
+        /// <summary>
+        /// Индекс текущей страницы
+        /// </summary>
+        private int CurrentPage
         {
-            base.Cleanup();
-            foreach (var cardGeneral in Generals)
+            get { return _currentPage; }
+            set
             {
-                cardGeneral.IAmSelected -= OnGeneralSelectionChanged;
+                var preview = PreviewCurrentPageIndexChanged(value);
+                _currentPage = preview;
+                DisplayFromFilter(_selectedFilter);
+                RaisePropertyChanged(() => CurrentPage);
             }
         }
 
-        private void InitData()
+        private int _currentPage;
+
+        /// <summary>
+        /// Объекты к отображению
+        /// </summary>
+        public List<IDisplayadble> ItemsToDisplay
         {
-            if (Generals.Count > 0)
+            get { return _itemsToDisplay; }
+            set
             {
-                foreach (var cardGeneral in Generals)
-                {
-                    cardGeneral.IAmSelected += OnGeneralSelectionChanged;
-                }
-                SelectedGeneral = Generals.First();
+                _itemsToDisplay = value;
+                RaisePropertyChanged(() => ItemsToDisplay);
             }
+        }
+
+        /// <summary>
+        /// Максимальное количество страниц для выбранного фильтра
+        /// </summary>
+        public int PagesTotalForSelected
+        {
+            get
+            {
+                return _selectedFilter == null ? 0 : 
+                    Convert.ToInt32(Math.Ceiling((decimal)_selectedFilter.ChildData.Count / MaxCardDiplayCount));
+            }
+        }
+
+        private List<IDisplayadble> _itemsToDisplay;
+
+        private IDisplayableFilter _selectedFilter;
+
+
+        public DeckConstructorViewModel()
+        {
+            Catalog = Catalog.Instance;
+            //Фильтрами служат генералы
+            ItemsToDisplay = new List<IDisplayadble>();
+            CardClickedCommand = new GalaSoft.MvvmLight.Command.RelayCommand<CardItemViewModelBase>(OnCardClicked);
+            ListRight = new RelayCommand(OnCardListRightCallback);
+            ListLeft = new RelayCommand(OnCardListLeftCallback);
+            MessengerInstance.Register<IDisplayStrategy>(this, OnNavMessageRecive);
+            NavigationButtonsEnabled = true;
+        }
+
+        public void SetDisplayFilters(IEnumerable<IDisplayableFilter> filters)
+        {
+            UnbindFilters();
+            CardFilters = new ObservableCollection<IDisplayableFilter>(filters);
+            BindFilters();
+            if (CardFilters.Any())
+            {
+                var first = CardFilters.First();
+                first.IsSelected = true;
+                _selectedFilter = first;
+            }
+            SetListToDisplay();
         }
 
 
         /// <summary>
-        /// Реакция на смену фильтра генерала
+        /// Перестроить список объектов к отображению
+        /// Для отображения доступны только модели из активного фильтра
         /// </summary>
-        /// <param name="general"></param>
-        private void OnGeneralSelectionChanged(CardGeneral general)
+        public void SetListToDisplay()
         {
-            //Отключить выделение у всех остальных генералов
-            Generals.Where(g => !g.Equals(SelectedGeneral))
-                .ToList().ForEach(g=> g.IsSelected = false);
-            _pagesForGeneral =
-                Convert.ToInt32(Math.Ceiling((double) (SelectedGeneral.CardViewModels.Length/MaxCardDiplayCount)));
+            var availebleFilters = CardFilters.Where(f => f.IsAvailebleToSelect).ToArray();
+            if (availebleFilters.Any())
+            {
+                availebleFilters[0].IsSelected = true;
+            }
             CurrentPage = 0;
         }
 
         /// <summary>
-        /// Изменить отображаемые карты
+        /// Вызывается, когда выбранный фильтр изменен
         /// </summary>
-        private void ChangeDisplayCards(int currentPage, int cardOnPage, CardGeneral selecCardGeneral)
+        private void DisplayFromFilter(IDisplayableFilter selected)
         {
-            if (selecCardGeneral == null)
+            if (selected == null)
             {
                 return;
             }
 
-            var lastIdx = (currentPage + 1) * cardOnPage;
-            var firstIdx = lastIdx - cardOnPage;
-
-            DisplayedCardViewModels = selecCardGeneral.CardViewModels.Skip(firstIdx).Take(cardOnPage).ToList();
+            var itemFirstToSelect = CurrentPage * MaxCardDiplayCount;
+            ItemsToDisplay = selected.ChildData.Skip(itemFirstToSelect).Take(MaxCardDiplayCount).ToList();
         }
 
         /// <summary>
-        /// Реакция на клик по карте
+        /// Реакция на выбранный фильтр
         /// </summary>
-        /// <param name="item"></param>
-        private void OnCardClicked(CardItemViewModelBase item)
+        /// <param name="filter"></param>
+        private void FilterOnSelectedChanged(IDisplayableFilter filter)
         {
-           MessengerInstance.Send<CardClickMessage>(new CardClickMessage(item));           
+            //if (filter.IsSelected)
+            //{
+            //    _selectedFilter = filter;
+            //    DisplayFromFilter(filter);
+            //}
         }
 
-        public ICommand CardClickedCommand { get; set; }
-
-        /// <summary>
-        /// Карты добавленные в колоду
-        /// </summary>
-        public ObservableCollection<CardItemViewModelBase> DeckCardItems { get; set; } 
-
-        /// <summary>
-        /// Доступные генералы
-        /// </summary>
-        public ObservableCollection<CardGeneral> Generals { get; set; }
-
-        /// <summary>
-        /// Карты, отображаемые на доске для выбора
-        /// </summary>
-        public List<CardItemViewModelBase> DisplayedCardViewModels
+        private int PreviewCurrentPageIndexChanged(int page)
         {
-            get { return _displayedCardViewModels; }
-            set
+            //Если выбрана страница больше чем доступна для текущего фильтра
+            int pageSelected;
+            if (page == PagesTotalForSelected)
             {
-                _displayedCardViewModels = value;
-                RaisePropertyChanged(() => DisplayedCardViewModels);
+                var idx = CardFilters.IndexOf(_selectedFilter);
+                if (idx < CardFilters.Count -1)
+                {
+                    _selectedFilter = CardFilters[idx + 1];
+                    pageSelected = 0;
+                    CardFilters[idx + 1].IsSelected = true;
+                    return pageSelected;
+                }
+                pageSelected = PagesTotalForSelected - 1;
+                return pageSelected;
             }
+            if(page < 0)
+            {
+                var idx = CardFilters.IndexOf(_selectedFilter);
+                if (idx != 0)
+                {
+                    _selectedFilter = CardFilters[idx - 1];
+                    pageSelected = Convert.ToInt32(Math.Ceiling((decimal)_selectedFilter.ChildData.Count / MaxCardDiplayCount)) - 1;
+                    _selectedFilter.IsSelected = true;
+                    return pageSelected;
+                }
+                pageSelected = 0;
+                return pageSelected;
+            }
+            pageSelected = page;
+            return pageSelected;
         }
 
         /// <summary>
@@ -208,22 +210,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// </summary>
         private void OnCardListLeftCallback()
         {
-            if (CurrentPage == 0)
-            {
-                //Если достигнута первая для генерала страница
-                var generalIndex = TakeSelectedGeneralIndex();
-                if (generalIndex != 0)
-                {
-                    //Если выбран не первый из генералов
-                    SelectedGeneral = Generals[generalIndex - 1];
-                    CurrentPage = _pagesForGeneral;
-                }
-            }
-            else
-            {
-                //Если страница не первая
-                CurrentPage--;
-            }
+            CurrentPage = CurrentPage - 1;
         }
 
         /// <summary>
@@ -231,53 +218,54 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// </summary>
         private void OnCardListRightCallback()
         {
-            if (_pagesForGeneral == CurrentPage)
+            CurrentPage = CurrentPage + 1;
+        }
+
+        private void OnNavMessageRecive(IDisplayStrategy message)
+        {
+            if (message != null)
             {
-                //Если достигнута последняя доступная для генерала страница
-                var generalIndex = TakeSelectedGeneralIndex();
-                if (generalIndex < Generals.Count - 1)
+                SetDisplayFilters(message.GetStrategyFilters());
+            }
+        }
+
+        /// <summary>
+        /// Биндинг на команду клика по карте
+        /// </summary>
+        public ICommand CardClickedCommand { get; set; }
+
+        /// <summary>
+        /// Реакция на клик по карте
+        /// </summary>
+        /// <param name="item"></param>
+        private void OnCardClicked(CardItemViewModelBase item)
+        {
+            MessengerInstance.Send<CardClickMessage>(new CardClickMessage(item));
+        }
+
+        private void BindFilters()
+        {
+            foreach (var filter in CardFilters)
+            {
+                filter.Selected += FilterOnSelectedChanged;
+            }
+        }
+
+        private void UnbindFilters()
+        {
+            if (CardFilters != null)
+            {
+                foreach (var filter in CardFilters)
                 {
-                    //Если выбран не последний генерал, то перелистнуть на следующего по счету генерала
-                    SelectedGeneral = Generals[generalIndex + 1];
+                    filter.Selected -= FilterOnSelectedChanged;
                 }
             }
-            else
-            {
-                //Если страница не последняя
-                CurrentPage++;
-            }
         }
 
-        private int TakeSelectedGeneralIndex()
+        public override void Cleanup()
         {
-            if (SelectedGeneral != null)
-            {
-                var idx =  Generals.IndexOf(SelectedGeneral);
-                if (idx == -1)
-                {
-                    throw new Exception("General not found in collection");
-                }
-                return idx;
-            }
-            throw new Exception("General does not selected");
+            UnbindFilters();
         }
-
-        private void InitCardChartInfoCollection()
-        {
-            ChartCardInfoCollection = new ObservableCollection<ChartBarCardInfo>();
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 0, ManaCost = 0});
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 1, ManaCost = 1 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 2, ManaCost = 2 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 3, ManaCost = 3 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 4, ManaCost = 4 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 5, ManaCost = 5 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 6, ManaCost = 6 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 7, ManaCost = 7 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 8, ManaCost = 8 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 9, ManaCost = 9 });
-            ChartCardInfoCollection.Add(new ChartBarCardInfo() { Count = 10, ManaCost = 10 });
-        }
-
-        public ObservableCollection<ChartBarCardInfo> ChartCardInfoCollection { get; set; } 
     }
+
 }

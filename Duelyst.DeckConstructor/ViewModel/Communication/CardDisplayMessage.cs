@@ -1,16 +1,15 @@
 ﻿using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
+using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 
 namespace Duelyst.DeckConstructor.ViewModel.Communication
 {
     public class CardDisplayMessage
     {
-        public SquadBuilderModeType ModeType { get; set; }
+        public IDisplayStrategy Strategy { get; set; }
 
-        public CardGeneral FilterGeneral { get; set; }
-
-        public CardDisplayMessage(SquadBuilderModeType modeType)
+        public CardDisplayMessage(IDisplayStrategy strategy)
         {
-            ModeType = modeType;
+            Strategy = strategy;
         }
     }
 }
