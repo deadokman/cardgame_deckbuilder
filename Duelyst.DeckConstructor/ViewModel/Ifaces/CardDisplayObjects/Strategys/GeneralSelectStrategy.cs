@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 
@@ -9,7 +10,7 @@ namespace Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys
 
         public IEnumerable<IDisplayableFilter> GetStrategyFilters()
         {
-            var strat = new CustomDisplayFilter(Catalog.Instance.ViewModelGenerals);
+            var strat = new CustomDisplayFilter(Catalog.Instance.ViewModelGenerals.Where(g => !g.IsNetural).Cast<IDisplayadble>().ToList());
             return new[] {strat};
         }
     }

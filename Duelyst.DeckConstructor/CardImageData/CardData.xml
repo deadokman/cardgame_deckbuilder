@@ -146,7 +146,7 @@
     ManaCost="0"
     AbilityName="NoAbility"
     Description="MyTestGeneral"
-    IsNetural="false">
+    IsNetural="true">
     <Attack>3</Attack>
     <Health>25</Health>
     <GeneralCards>

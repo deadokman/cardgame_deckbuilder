@@ -78,5 +78,9 @@ namespace Duelyst.DeckConstructor.CardCatalog
         [DataMember]
         [XmlAttribute]
         public string CardImageName { get; set; }
+
+        [DataMember]
+        [XmlAttribute]
+        public bool IsNetural { get; set; }
     }
 }

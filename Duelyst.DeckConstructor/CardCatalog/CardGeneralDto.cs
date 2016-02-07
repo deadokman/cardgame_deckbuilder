@@ -12,8 +12,5 @@ namespace Duelyst.DeckConstructor.CardCatalog
 
         [XmlArray("GeneralCards")]
         public List<CardDtoItem> Cards { get; set; }
-
-        [XmlAttribute]
-        public bool IsNetural { get; set; }
     }
 }

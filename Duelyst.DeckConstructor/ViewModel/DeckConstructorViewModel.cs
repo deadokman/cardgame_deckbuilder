@@ -13,11 +13,18 @@ namespace Duelyst.DeckConstructor.ViewModel
 {
     public class DeckConstructorViewModel : ResizableViewModelBase
     {
-
         /// <summary>
         /// Доступные генералы
         /// </summary>
-        public ObservableCollection<IDisplayableFilter> CardFilters { get; set; }
+        public ObservableCollection<IDisplayableFilter> CardFilters
+        {
+            get { return _cardFilters; }
+            set
+            {
+                _cardFilters = value; 
+                RaisePropertyChanged(() => CardFilters);
+            }
+        }
 
         /// <summary>
         /// Максимальное количество карт отображаемое на странице
@@ -101,6 +108,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         private List<IDisplayadble> _itemsToDisplay;
 
         private IDisplayableFilter _selectedFilter;
+        private ObservableCollection<IDisplayableFilter> _cardFilters;
 
 
         public DeckConstructorViewModel()

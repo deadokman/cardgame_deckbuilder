@@ -16,6 +16,9 @@
       SizeChanged="DeckConstructorSpellBook_OnSizeChanged">
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToVisibilityConverter x:Key="btvConverter"/>
             <Style x:Key="NewSquadButtom" TargetType="Image">
                 <Setter Property="Source" Value="UI/button_primary_glow.png"/>
@@ -108,7 +111,7 @@
                         <ToolBar ItemsSource="{Binding CardFilters}" ToolBarTray.IsLocked="True" OverflowMode="Never" Background="Transparent">
                             <ToolBar.ItemTemplate>
                                 <DataTemplate>
-                                    <ToggleButton IsChecked="{Binding IsSelected, Mode=TwoWay}" VerticalAlignment="Center">
+                                    <ToggleButton IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsAvailebleToSelect}" VerticalAlignment="Center">
                                         <ToggleButton.Template>
                                             <ControlTemplate>
                                                 <Border IsEnabled="{Binding IsAvailebleToSelect}" BorderBrush="{x:Null}" Height="25">
@@ -200,9 +203,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <!--Строка с экспорта отряда в изоборажение или же файл-->
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="59"/>
                 </Grid.RowDefinitions>
-                <TextBox Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
+                <TextBox Text="{Binding Path=CurrentSquadName}" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
                 <DockPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="1"></DockPanel>
                 <!--Лист с картами по подготовленному шаблоу-->
                 <ListView Grid.Row="2" ItemsSource="{Binding CardListItems}" Background="Transparent">
@@ -260,9 +263,14 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <DockPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="6">
-                    <Button />
-                </DockPanel>
+                <Grid Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".5*"/>
+                        <ColumnDefinition Width=".5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Width="60" Height="60" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="0"/>
+                    <Button Width="60" Height="60" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="1"/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

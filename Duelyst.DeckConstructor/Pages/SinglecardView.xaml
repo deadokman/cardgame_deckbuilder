@@ -38,6 +38,6 @@
                 <DropShadowEffect Direction="-20" ShadowDepth="5" BlurRadius="10" Color="Black" Opacity="80" />
             </Image.Effect>
         </Image>
-        <TextBlock Margin="5,5,5,5" Name="InDeckCount" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <TextBlock Name="InDeckCount" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>

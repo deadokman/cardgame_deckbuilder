@@ -40,6 +40,7 @@ namespace Duelyst.DeckConstructor.CardCatalog
             }
 
             producedType.CardType = cardType;
+            producedType.IsNetural = dto.IsNetural;
             if (string.IsNullOrEmpty(dto.Id))
             {
                 producedType.CardId = (dto.Name.GetHashCode() ^ dto.ManaCost.GetHashCode()).ToString();

@@ -36,6 +36,16 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// </summary>
         private Squad _сurrentBuildingSquad;
 
+        public string CurrentSquadName
+        {
+            get { return _сurrentBuildingSquad == null ? string.Empty : _сurrentBuildingSquad.Name; }
+            set
+            {
+                _сurrentBuildingSquad.Name = value;
+                RaisePropertyChanged(() => CurrentSquadName);
+            }
+        }
+
         public ObservableCollection<ListItemViewModelBase> CardListItems { get; set; }
 
         /// <summary>
@@ -56,12 +66,15 @@ namespace Duelyst.DeckConstructor.ViewModel
             {
                 //Если в режиме сбора отряда
                 //TODO:Произвести проверку возможности добавления карты в текущий отряд, выполнить добавление
-                CardListItems.Add(message.Card);
                 var general = card as CardGeneral;
                 if (general != null)
                 {
                     _сurrentBuildingSquad = _squadManager.InitNewSquad(general);
-                    //MessengerInstance.Send(new CardDisplayMessage(ESquadBuilderModeType.SquadBuildMode));
+                    //Необходимость действий со справочником сомнительна. Сделано для единообразия
+                    Strategys[ESquadBuilderModeType.SquadBuildMode] = new GeneralSuadStrategy(general);
+                    CardListItems.Add(general);
+                    CurrentSquadName = String.Format("Отряд {0}", general.Name);
+                    MessengerInstance.Send(Strategys[ESquadBuilderModeType.SquadBuildMode]);
                     return;
                 }
 
@@ -70,7 +83,14 @@ namespace Duelyst.DeckConstructor.ViewModel
                     throw new Exception("Не создан экземпляр нового оряда");
                 }
 
-                _сurrentBuildingSquad.TryAddCard(card);
+                if (!_сurrentBuildingSquad.TryAddCard(card))
+                {
+                    
+                }
+                else
+                {
+                    CardListItems.Add(card);
+                }
             }
         }
 

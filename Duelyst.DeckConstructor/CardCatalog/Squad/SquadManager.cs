@@ -49,7 +49,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                 //Прикол с инициализацией данного варианта конструктора из-за IL инъекций кода внутри класса
                 //что приводит к CLR ошибки не влияющей в конечном счете на работу экземпляра. Microsoft sucks!
                 //http://stackoverflow.com/questions/3494886/filenotfoundexception-in-applicationsettingsbase
-                _squadSeri = new XmlSerializer(typeof(Squad), String.Empty);
+                _squadSeri = new XmlSerializer(typeof(Squad));
             }
             catch (Exception)
             {

@@ -7,7 +7,12 @@ namespace Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys
     {
         public IEnumerable<IDisplayableFilter> GetStrategyFilters()
         {
-            return Catalog.Instance.ViewModelGenerals;
+            var generals = Catalog.Instance.ViewModelGenerals;
+            foreach (var cardGeneral in generals)
+            {
+                cardGeneral.IsAvailebleToSelect = true;
+            }
+            return generals;
         }
     }
 }

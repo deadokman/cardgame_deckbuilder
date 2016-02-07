@@ -39,6 +39,8 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
             return other != null && other.CardId == CardId;
         }
 
+        public bool IsNetural { get; set; }
+
         public bool Equals(IDisplayadble other)
         {
             var otherVm = other as CardItemViewModelBase;

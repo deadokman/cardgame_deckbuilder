@@ -14,6 +14,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         {
             SquadErrors = new List<SquadBuildError>();
             _squadCards = new Dictionary<string, CardItemViewModelBase>();
+            CardSquadCount = new Dictionary<string, int>();
         }
 
         /// <summary>
@@ -85,8 +86,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// <param name="card">Новая карта</param>
         public bool TryAddCard(CardItemViewModelBase card)
         {
-
-            if (card.Owner != null && !card.Owner.Equals(SquadOwner))
+            if (card.Owner != null && (!card.Owner.Equals(SquadOwner) && !card.Owner.IsNetural))
             {
                 return false;
             }
@@ -95,7 +95,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                 //TODO: PROCESS
             }
 
-            int squadCount = 1;
+            int squadCount;
             if (CardSquadCount.TryGetValue(card.CardId, out squadCount))
             {
                 if (squadCount == card.MaxInDeck)
@@ -116,8 +116,11 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                 CardSquadCount[card.CardId] = squadCount + 1;
                 return true;
             }
+            else
+            {
+                CardSquadCount[card.CardId] = 1;
+            }
 
-            CardSquadCount[card.CardId] = squadCount;
             _squadCards.Add(card.CardId, card);
             return true;
         }

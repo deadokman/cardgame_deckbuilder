@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-    <Grid Margin="5,5,5,5">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>

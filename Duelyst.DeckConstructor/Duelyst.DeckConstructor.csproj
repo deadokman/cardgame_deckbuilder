@@ -158,6 +158,7 @@
     <Compile Include="ViewModel\Ifaces\CardDisplayObjects\IDisplayStrategy.cs" />
     <Compile Include="ViewModel\Ifaces\CardDisplayObjects\Strategys\CollectionDisplayStrategy.cs" />
     <Compile Include="ViewModel\Ifaces\CardDisplayObjects\Strategys\GeneralSelectStrategy.cs" />
+    <Compile Include="ViewModel\Ifaces\CardDisplayObjects\Strategys\GeneralSuadStrategy.cs" />
     <Compile Include="ViewModel\Ifaces\IResizeableViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\AppBackgroundPageViewModel.cs" />
