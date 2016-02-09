@@ -31,8 +31,8 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
         {
             if (CardViewModelsDictionary.ContainsKey(item.CardId))
             {
-                throw new ArgumentException(
-                    $"Карта с идентфикатором {item.CardId} уже добавлена к списку подчиненных генералу");
+                throw new ArgumentException(String.Empty);
+                //$"Карта с идентфикатором {item.CardId} уже добавлена к списку подчиненных генералу");
             }
 
             item.Owner = this;

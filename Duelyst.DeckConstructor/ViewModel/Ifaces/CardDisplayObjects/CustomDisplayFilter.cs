@@ -18,9 +18,9 @@ namespace Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects
             return other != null && other.Name != null && Name != null && other.Name.Equals(this.Name);
         }
 
-        public BitmapImage Image { get; }
-        public string Name { get; }
-        public IList<IDisplayadble> ChildData { get; }
+        public BitmapImage Image { get; set; }
+        public string Name { get; set; }
+        public IList<IDisplayadble> ChildData { get; set; }
 
         public bool IsSelected
         {
@@ -41,6 +41,6 @@ namespace Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects
         }
 
         public event FilterSelectionChanged Selected;
-        public bool IsAvailebleToSelect { get; }
+        public bool IsAvailebleToSelect { get; set; }
     }
 }

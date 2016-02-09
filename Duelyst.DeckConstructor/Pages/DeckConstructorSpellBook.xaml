@@ -212,6 +212,11 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid ClipToBounds="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewMouseUp">
+                                        <i:InvokeCommandAction />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width=".2*" />
                                     <ColumnDefinition Width=".8*" />
@@ -268,8 +273,20 @@
                         <ColumnDefinition Width=".5*"/>
                         <ColumnDefinition Width=".5*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Width="60" Height="60" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="0"/>
-                    <Button Width="60" Height="60" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="1"/>
+                    <Button HorizontalAlignment="Stretch"  Grid.Column="0">
+                        <Image HorizontalAlignment="Stretch" Source="UI/button_primary_glow.png"/>
+                     </Button>
+                    <Button HorizontalAlignment="Stretch"  Grid.Column="1">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Canvas>
+                                    <Image HorizontalAlignment="Stretch" Source="UI/button_primary_glow.png"/>
+                                    <TextBlock Canvas.Left="22" Canvas.Top="8" Text="Отмена"  FontSize="18"/>
+                                </Canvas>
+                            </ControlTemplate>
+                        </Button.Template>
+
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

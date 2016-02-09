@@ -33,7 +33,6 @@ namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 
         public ECardType CardType { get; set; }
 
-
         public bool Equals(CardItemViewModelBase other)
         {
             return other != null && other.CardId == CardId;

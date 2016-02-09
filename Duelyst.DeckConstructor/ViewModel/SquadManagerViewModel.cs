@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog.Squad;
 using Duelyst.DeckConstructor.ViewModel.Communication;
@@ -80,7 +81,7 @@ namespace Duelyst.DeckConstructor.ViewModel
 
                 if (_сurrentBuildingSquad == null)
                 {
-                    throw new Exception("Не создан экземпляр нового оряда");
+                    throw new Exception("Не создан экземпляр нового отряда");
                 }
 
                 if (!_сurrentBuildingSquad.TryAddCard(card))
@@ -89,8 +90,22 @@ namespace Duelyst.DeckConstructor.ViewModel
                 }
                 else
                 {
-                    CardListItems.Add(card);
+                    AddCardInorder(card);
                 }
+            }
+        }
+
+        private void AddCardInorder(CardItemViewModelBase card)
+        {
+            var prevp = CardListItems.Where(i => i.ManaCost <= card.ManaCost).FirstOrDefault(i => String.Compare(i.Name, card.Name, StringComparison.InvariantCultureIgnoreCase) < 0);
+            if (prevp != null)
+            {
+                var idx = CardListItems.IndexOf(prevp);
+                CardListItems.Insert(idx + 1, card);
+            }
+            else
+            {
+                CardListItems.Add(card);
             }
         }
 
