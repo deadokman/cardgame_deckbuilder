@@ -88,7 +88,7 @@
                 <ColumnDefinition Width=".75*"/>
                 <ColumnDefinition Width=".25*"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <Grid Name="CardPresenterHolder" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height=".1*"/>
                     <RowDefinition Height=".9*"/>
@@ -172,18 +172,24 @@
                 <!--<Frame Grid.Row="1" Source="CardPresenterPage.xaml"  NavigationUIVisibility="Hidden"/>-->
                 <Grid  Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="15*"/>
-                        <ColumnDefinition Width="15*"/>
-                        <ColumnDefinition Width="46*"/>
-                        <ColumnDefinition Width="194*"/>
-                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Command="{Binding ListLeft}" IsEnabled="{Binding NavigationButtonsEnabled}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Grid.ColumnSpan="2" Margin="10,226,10,225"></Button>
+                    
                     <!--Контролл отображения карт-->
-                    <local:CardPresenterPage Command="{Binding CardClickedCommand}" CardSource="{Binding ItemsToDisplay, Mode=TwoWay}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
-
-                    </local:CardPresenterPage>
-                    <Button Command="{Binding ListRight}" IsEnabled="{Binding NavigationButtonsEnabled}" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="10,226,10,225"></Button>
+                    <local:CardPresenterPage Margin="5" Grid.Column="0" Command="{Binding CardClickedCommand}" CardSource="{Binding ItemsToDisplay, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".2*"/>
+                        <ColumnDefinition Width=".8*"/>
+                        <ColumnDefinition Width=".2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding ListLeft}" IsEnabled="{Binding NavigationButtonsEnabled}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="40" Height="40" >
+                        
+                    </Button>
+                    <Button Command="{Binding ListRight}" IsEnabled="{Binding NavigationButtonsEnabled}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" Height="40">
+                        
+                    </Button>
                 </Grid>
             </Grid>
             <!--Колонка для конструктора отряда с собственным контекстом-->
@@ -205,10 +211,11 @@
                     <!--Строка с экспорта отряда в изоборажение или же файл-->
                     <RowDefinition Height="59"/>
                 </Grid.RowDefinitions>
-                <TextBox Text="{Binding Path=CurrentSquadName}" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="Bold"/>
+                <Label Content="КОЛЛЕКЦИЯ" Visibility="{Binding CardCollectionMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" FontSize="22" FontWeight="ExtraLight" />
+                <TextBox Text="{Binding Path=CurrentSquadName}" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="ExtraLight"/>
                 <DockPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="1"></DockPanel>
                 <!--Лист с картами по подготовленному шаблоу-->
-                <ListView Grid.Row="2" ItemsSource="{Binding CardListItems}" Background="Transparent">
+                <ListView SelectionMode="Single" SelectedItem="{Binding Path=SelectedCardItem, Mode=OneWayToSource}" Grid.Row="2" ItemsSource="{Binding CardListItems}" Background="Transparent">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid ClipToBounds="True">
@@ -273,19 +280,8 @@
                         <ColumnDefinition Width=".5*"/>
                         <ColumnDefinition Width=".5*"/>
                     </Grid.ColumnDefinitions>
-                    <Button HorizontalAlignment="Stretch"  Grid.Column="0">
-                        <Image HorizontalAlignment="Stretch" Source="UI/button_primary_glow.png"/>
-                     </Button>
-                    <Button HorizontalAlignment="Stretch"  Grid.Column="1">
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Canvas>
-                                    <Image HorizontalAlignment="Stretch" Source="UI/button_primary_glow.png"/>
-                                    <TextBlock Canvas.Left="22" Canvas.Top="8" Text="Отмена"  FontSize="18"/>
-                                </Canvas>
-                            </ControlTemplate>
-                        </Button.Template>
-
+                    <Button Content="ОТОБРАЗИТЬ" FontSize="10" FontWeight="ExtraLight" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="0"/>
+                    <Button Content="СОХРАНИТЬ" FontSize="10" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="1">
                     </Button>
                 </Grid>
             </Grid>

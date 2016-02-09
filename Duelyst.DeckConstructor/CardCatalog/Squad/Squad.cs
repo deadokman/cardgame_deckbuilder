@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
@@ -13,8 +14,8 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         public Squad()
         {
             SquadErrors = new List<SquadBuildError>();
-            _squadCards = new Dictionary<string, CardItemViewModelBase>();
             CardSquadCount = new Dictionary<string, int>();
+            SquadCardsList = new ObservableCollection<ListItemViewModelBase>();
         }
 
         /// <summary>
@@ -67,19 +68,44 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// Карты входяие в отряд
         /// </summary>
         [XmlIgnore]
-        public CardItemViewModelBase[] SquadCards
+        public ObservableCollection<ListItemViewModelBase> SquadCardsList { get; set; }
+
+        public bool TryRemoveCard(ListItemViewModelBase card)
         {
-            get
+            var squadCard = card as CardItemViewModelBase;
+            if (squadCard != null && CardSquadCount.ContainsKey(squadCard.CardId) && !squadCard.Equals(SquadOwner))
             {
-                return _squadCards.Select(s => s.Value).ToArray();
+                var cardInSquad = CardSquadCount[squadCard.CardId] - 1;
+                if (cardInSquad == 0)
+                {
+                    CardSquadCount.Remove(squadCard.CardId);
+                }
+                else
+                {
+                    CardSquadCount[squadCard.CardId] = cardInSquad;
+                }
+
+                SquadCardsList.Remove(card);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void AddCardInorder(ListItemViewModelBase card)
+        {
+            var prevp = SquadCardsList.Where(i => i.ManaCost <= card.ManaCost).FirstOrDefault(i => String.Compare(i.Name, card.Name, StringComparison.InvariantCultureIgnoreCase) < 0);
+            if (prevp != null)
+            {
+                var idx = SquadCardsList.IndexOf(prevp);
+                SquadCardsList.Insert(idx + 1, card);
+            }
+            else
+            {
+                SquadCardsList.Add(card);
             }
         }
 
-        /// <summary>
-        /// Список карт отряда
-        /// </summary>
-        private Dictionary<string, CardItemViewModelBase> _squadCards; 
-        
         /// <summary>
         /// Добавить карту к отряду
         /// </summary>
@@ -114,14 +140,13 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                 }
 
                 CardSquadCount[card.CardId] = squadCount + 1;
-                return true;
             }
             else
             {
                 CardSquadCount[card.CardId] = 1;
             }
 
-            _squadCards.Add(card.CardId, card);
+            AddCardInorder(card);
             return true;
         }
 

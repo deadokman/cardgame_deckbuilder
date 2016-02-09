@@ -17,6 +17,7 @@ namespace Duelyst.DeckConstructor.ViewModel
     {
         private Dictionary<ESquadBuilderModeType, IDisplayStrategy> Strategys; 
 
+
         public SquadManagerViewModel()
         {
             CardListItems = new ObservableCollection<ListItemViewModelBase>();
@@ -27,7 +28,8 @@ namespace Duelyst.DeckConstructor.ViewModel
             Strategys = new Dictionary<ESquadBuilderModeType, IDisplayStrategy>();
             Strategys.Add(ESquadBuilderModeType.CollectionMode, new CollectionDisplayStrategy());
             Strategys.Add(ESquadBuilderModeType.GeneralSelectMode, new GeneralSelectStrategy());
-            MessengerInstance.Send(Strategys[ESquadBuilderModeType.CollectionMode]);
+            _currentBuildMode = ESquadBuilderModeType.CollectionMode;
+            MessengerInstance.Send(Strategys[_currentBuildMode]);
         }
 
         private SquadManager _squadManager;
@@ -39,7 +41,7 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         public string CurrentSquadName
         {
-            get { return _сurrentBuildingSquad == null ? string.Empty : _сurrentBuildingSquad.Name; }
+            get { return _сurrentBuildingSquad == null ? "КОЛЛЕКЦИЯ" : _сurrentBuildingSquad.Name; }
             set
             {
                 _сurrentBuildingSquad.Name = value;
@@ -47,12 +49,45 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
 
-        public ObservableCollection<ListItemViewModelBase> CardListItems { get; set; }
+        public ObservableCollection<ListItemViewModelBase> CardListItems
+        {
+            get { return _cardListItems; }
+            set
+            {
+                _cardListItems = value; 
+                RaisePropertyChanged(() => CardListItems);
+            }
+        }
 
         /// <summary>
         /// Команда переводящая вью модель в режим построение отряда
         /// </summary>
         public ICommand NewSquadCommand { get; set; }
+
+        private ESquadBuilderModeType _currentBuildMode;
+
+
+        /// <summary>
+        /// Выбранная карта
+        /// </summary>
+        public CardItemViewModelBase SelectedCardItem
+        {
+            get { return _selectedCardItem; }
+            set
+            {
+                _selectedCardItem = value;
+                RemoveCard(value);
+
+            }
+        }
+
+        private void RemoveCard(ListItemViewModelBase card)
+        {
+            if (card != null)
+            {
+                _сurrentBuildingSquad.TryRemoveCard(card);
+            }
+        }
 
         private void EnterSquadBuilderMode()
         {
@@ -71,11 +106,13 @@ namespace Duelyst.DeckConstructor.ViewModel
                 if (general != null)
                 {
                     _сurrentBuildingSquad = _squadManager.InitNewSquad(general);
+                    CardListItems = _сurrentBuildingSquad.SquadCardsList;
+                    _currentBuildMode = ESquadBuilderModeType.SquadBuildMode;
                     //Необходимость действий со справочником сомнительна. Сделано для единообразия
-                    Strategys[ESquadBuilderModeType.SquadBuildMode] = new GeneralSuadStrategy(general);
-                    CardListItems.Add(general);
+                    Strategys[_currentBuildMode] = new GeneralSuadStrategy(general);
+                    _сurrentBuildingSquad.SquadCardsList.Add(general);
                     CurrentSquadName = String.Format("Отряд {0}", general.Name);
-                    MessengerInstance.Send(Strategys[ESquadBuilderModeType.SquadBuildMode]);
+                    MessengerInstance.Send(Strategys[_currentBuildMode]);
                     return;
                 }
 
@@ -88,24 +125,6 @@ namespace Duelyst.DeckConstructor.ViewModel
                 {
                     
                 }
-                else
-                {
-                    AddCardInorder(card);
-                }
-            }
-        }
-
-        private void AddCardInorder(CardItemViewModelBase card)
-        {
-            var prevp = CardListItems.Where(i => i.ManaCost <= card.ManaCost).FirstOrDefault(i => String.Compare(i.Name, card.Name, StringComparison.InvariantCultureIgnoreCase) < 0);
-            if (prevp != null)
-            {
-                var idx = CardListItems.IndexOf(prevp);
-                CardListItems.Insert(idx + 1, card);
-            }
-            else
-            {
-                CardListItems.Add(card);
             }
         }
 
@@ -143,5 +162,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
         private bool _cardCollectionObserverMod;
+        private CardItemViewModelBase _selectedCardItem;
+        private ObservableCollection<ListItemViewModelBase> _cardListItems;
     }
 }
