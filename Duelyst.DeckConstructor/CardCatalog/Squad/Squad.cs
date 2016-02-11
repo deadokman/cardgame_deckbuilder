@@ -70,6 +70,13 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         [XmlIgnore]
         public ObservableCollection<ListItemViewModelBase> SquadCardsList { get; set; }
 
+        public CardItemViewModelBase[] SquadCards
+        {
+            get
+            {
+                return SquadCardsList.Cast<CardItemViewModelBase>().ToArray();
+            } }
+
         public bool TryRemoveCard(ListItemViewModelBase card)
         {
             var squadCard = card as CardItemViewModelBase;
@@ -85,7 +92,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                     CardSquadCount[squadCard.CardId] = cardInSquad;
                 }
 
-                SquadCardsList.Remove(card);
+                SquadCardsList.Remove(squadCard);
                 return true;
             }
 
@@ -94,15 +101,21 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
 
         private void AddCardInorder(ListItemViewModelBase card)
         {
+            var squadCard = card as CardItemViewModelBase;
+            if (squadCard == null)
+            {
+                throw new ArgumentException("Аргумент должен иметь тип карты отряда");
+            }
+
             var prevp = SquadCardsList.Where(i => i.ManaCost <= card.ManaCost).FirstOrDefault(i => String.Compare(i.Name, card.Name, StringComparison.InvariantCultureIgnoreCase) < 0);
             if (prevp != null)
             {
                 var idx = SquadCardsList.IndexOf(prevp);
-                SquadCardsList.Insert(idx + 1, card);
+                SquadCardsList.Insert(idx + 1, squadCard);
             }
             else
             {
-                SquadCardsList.Add(card);
+                SquadCardsList.Add(squadCard);
             }
         }
 

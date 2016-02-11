@@ -157,7 +157,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         {
             if (_сurrentBuildingSquad != null)
             {
-                
+                var image =ToPictureProcessor.SquadToImage(_сurrentBuildingSquad);
             }
 
         }

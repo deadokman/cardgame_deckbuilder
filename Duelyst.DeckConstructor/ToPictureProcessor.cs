@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Windows.Controls;
 using Duelyst.DeckConstructor.CardCatalog.Squad;
+using Image = System.Drawing.Image;
 
 namespace Duelyst.DeckConstructor
 {
@@ -26,7 +28,7 @@ namespace Duelyst.DeckConstructor
             var ownerHlen = squad.SquadOwner.Image.Height;
             var ownerWlen = squad.SquadOwner.Image.Width;
             //Получить общее количество уникальных карт в отряде
-            var uniqueCardList = squad.SquadCardsList.Distinct();
+            var uniqueCardList = squad.SquadCards.Distinct().ToArray();
             var uniqueCardsCount = uniqueCardList.Count();
             var rows = Convert.ToInt32(Math.Ceiling((decimal)uniqueCardsCount / _cardsInrow));
             //результирующая высота картинки
@@ -41,10 +43,21 @@ namespace Duelyst.DeckConstructor
                     canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     for (int col = 0; col < _cardsInrow; col++)
                     {
+                        var rightSetepOver = Convert.ToInt32((col + 1)*ownerHlen*_cardColIntervalPx);
                         for (int row = 0; row < rows; row++)
                         {
-                            
-                            //canvas.DrawImage();
+                            var idx = row*_cardsInrow + col;
+                            if (idx < uniqueCardsCount)
+                            {
+                                var downSetOver = Convert.ToInt32((row + 1) * ownerWlen * _cardRowIntervalPx);
+                                canvas.DrawImage(new Bitmap(uniqueCardList[idx].Image.StreamSource), new Point(rightSetepOver, downSetOver));
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                            canvas.Save();
                         }
                     }
                 }

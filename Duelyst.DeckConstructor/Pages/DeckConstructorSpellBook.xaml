@@ -280,7 +280,7 @@
                         <ColumnDefinition Width=".5*"/>
                         <ColumnDefinition Width=".5*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="ОТОБРАЗИТЬ" FontSize="10" FontWeight="ExtraLight" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="0"/>
+                    <Button Command="{Binding MakePicture}" Content="ОТОБРАЗИТЬ" FontSize="10" FontWeight="ExtraLight" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="0"/>
                     <Button Content="СОХРАНИТЬ" FontSize="10" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="1">
                     </Button>
                 </Grid>
