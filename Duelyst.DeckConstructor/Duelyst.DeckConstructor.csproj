@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="ParalaxBinary\ParallaxConverter .cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ToPictureProcessor.cs" />
     <Compile Include="VectorCalcs\VectorMath.cs" />
     <Compile Include="ViewModel\ChartBarCardInfo.cs" />
     <Compile Include="ViewModel\Communication\CardClickMessage.cs" />

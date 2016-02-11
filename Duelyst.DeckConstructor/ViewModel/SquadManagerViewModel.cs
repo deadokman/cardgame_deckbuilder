@@ -23,6 +23,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             CardListItems = new ObservableCollection<ListItemViewModelBase>();
             CardCollectionMode = true;
             NewSquadCommand = new RelayCommand(EnterSquadBuilderMode);
+            MakePicture = new RelayCommand(OnMakePicture);
             MessengerInstance.Register(this, (CardClickMessage m) => ReciveCardClick(m));
             _squadManager = SquadManager.Instance;
             Strategys = new Dictionary<ESquadBuilderModeType, IDisplayStrategy>();
@@ -63,6 +64,11 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// Команда переводящая вью модель в режим построение отряда
         /// </summary>
         public ICommand NewSquadCommand { get; set; }
+
+        /// <summary>
+        /// Сделать изображение отряда
+        /// </summary>
+        public ICommand MakePicture { get; set; }
 
         private ESquadBuilderModeType _currentBuildMode;
 
@@ -123,7 +129,7 @@ namespace Duelyst.DeckConstructor.ViewModel
 
                 if (!_сurrentBuildingSquad.TryAddCard(card))
                 {
-                    
+                 
                 }
             }
         }
@@ -145,6 +151,15 @@ namespace Duelyst.DeckConstructor.ViewModel
                 return !_cardCollectionObserverMod;
 
             }
+        }
+
+        private void OnMakePicture()
+        {
+            if (_сurrentBuildingSquad != null)
+            {
+                
+            }
+
         }
 
         public bool CardCollectionMode
