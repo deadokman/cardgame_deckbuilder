@@ -211,34 +211,51 @@
                     <!--Строка с экспорта отряда в изоборажение или же файл-->
                     <RowDefinition Height="59"/>
                 </Grid.RowDefinitions>
-                <Label Content="КОЛЛЕКЦИЯ" Visibility="{Binding CardCollectionMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" FontSize="22" FontWeight="ExtraLight" />
-                <TextBox Text="{Binding Path=CurrentSquadName}" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4" Grid.Row="0" BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="ExtraLight"/>
+                <!--Лейбл названия коллекциии или отряда-->
+                <TextBox HorizontalAlignment="Stretch" Grid.Row="0" Text="{Binding Path=CurrentSquadName}" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4"  BorderThickness="0" BorderBrush="Transparent" TextAlignment="Left" FontSize="22" FontWeight="ExtraLight"/>
+                <DockPanel Margin="2" Grid.Row="0">
+                    <Label HorizontalAlignment="Stretch" Content="КОЛЛЕКЦИЯ" Visibility="{Binding CardCollectionMode, Converter={StaticResource btvConverter}}" Margin="4,4,4,4"  BorderThickness="0" BorderBrush="Transparent" FontSize="22" FontWeight="ExtraLight" />
+                    <StackPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" HorizontalAlignment="Right">
+                        <Button BorderThickness="0" Command="{Binding MakePicture}" Width="20" Height="20">
+                            <Button.Content>
+                                <Path Stretch="Uniform" Stroke="white"  Data="{Binding Source={StaticResource Eye}}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button BorderThickness="0" Width="20" Height="20">
+                            <Button.Content>
+                                <Path Stretch="Uniform" Stroke="white"  Data="{Binding Source={StaticResource Trash}}"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
                 <DockPanel Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="1"></DockPanel>
                 <!--Лист с картами по подготовленному шаблоу-->
-                <ListView SelectionMode="Single" SelectedItem="{Binding Path=SelectedCardItem, Mode=OneWayToSource}" Grid.Row="2" ItemsSource="{Binding CardListItems}" Background="Transparent">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ClipToBounds="True">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="PreviewMouseUp">
-                                        <i:InvokeCommandAction />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width=".2*" />
-                                    <ColumnDefinition Width=".8*" />
-                                </Grid.ColumnDefinitions>
-                                <Border  Grid.Column="0"  BorderBrush="{x:Null}" Height="35">
-                                    <Border.Background>
-                                        <ImageBrush Stretch="Uniform"  ImageSource="UI/icon_mana-hd.png"></ImageBrush>
-                                    </Border.Background>
-                                    <TextBlock Height="50" FontSize="22" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding ManaCost}"/>
-                                </Border>
-                                <TextBlock Height="25" FontWeight="Bold" FontSize="17" TextAlignment="Left" Text="{Binding Name}" Grid.Column="1"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <ScrollViewer Grid.Row="2" >
+                    <ListView SelectionMode="Single" SelectedItem="{Binding Path=SelectedCardItem, Mode=OneWayToSource}" ItemsSource="{Binding CardListItems}" Background="Transparent">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ClipToBounds="True">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width=".2*" />
+                                        <ColumnDefinition Width=".8*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border  Grid.Column="0"  BorderBrush="{x:Null}" Height="35">
+                                        <Border.Background>
+                                            <ImageBrush Stretch="Uniform"  ImageSource="UI/icon_mana-hd.png"></ImageBrush>
+                                        </Border.Background>
+                                        <TextBlock Height="50" FontSize="22" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding ManaCost}"/>
+                                    </Border>
+                                    <TextBlock Height="25" FontWeight="Bold" FontSize="17" TextAlignment="Left" Text="{Binding Name}" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
                 <!--Описание кнопки создания нового отряда-->
                 <Button Command="{Binding NewSquadCommand}" Grid.Row="3" Visibility="{Binding CardCollectionMode, Converter={StaticResource btvConverter}}">
                     <Button.Template>
@@ -275,15 +292,10 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <Grid Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}" Grid.Row="6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".5*"/>
-                        <ColumnDefinition Width=".5*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Command="{Binding MakePicture}" Content="ОТОБРАЗИТЬ" FontSize="10" FontWeight="ExtraLight" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="0"/>
-                    <Button Content="СОХРАНИТЬ" FontSize="10" Margin="5, 15" HorizontalAlignment="Stretch"  Grid.Column="1">
-                    </Button>
-                </Grid>
+                <DockPanel Grid.Row="4" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}">
+                    <Label HorizontalAlignment="Center" BorderThickness="0" BorderBrush="Transparent" FontSize="12" FontWeight="ExtraLight"  Content="КАРТ ДОБАВЛЕНО: "/>
+                    <Label HorizontalAlignment="Center" BorderThickness="0" BorderBrush="Transparent" FontSize="12" FontWeight="ExtraLight" Content="0/40" />
+                </DockPanel>
             </Grid>
         </Grid>
     </Grid>
