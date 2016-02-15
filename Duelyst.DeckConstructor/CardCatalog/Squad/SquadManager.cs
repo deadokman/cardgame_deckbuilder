@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Media;
 using System.Xml.Serialization;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 
@@ -11,6 +12,13 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
     /// </summary>
     public class SquadManager
     {
+        //TODO: DefineGlobalConfig
+
+        public static int MaxCardCount
+        {
+            get { return 40; }
+        }
+
         private const string SquadFolderName = "Squads";
 
         /// <summary>

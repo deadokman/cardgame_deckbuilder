@@ -33,7 +33,16 @@ namespace Duelyst.DeckConstructor.ViewModel
             Strategys.Add(ESquadBuilderModeType.CollectionMode, new CollectionDisplayStrategy());
             Strategys.Add(ESquadBuilderModeType.GeneralSelectMode, new GeneralSelectStrategy());
             _currentBuildMode = ESquadBuilderModeType.CollectionMode;
+            CardItemClickCmd = new RelayCommand<CardItemViewModelBase>(OnCardItemClic);
             MessengerInstance.Send(Strategys[_currentBuildMode]);
+        }
+
+        private void OnCardItemClic(CardItemViewModelBase cardItemViewModelBase)
+        {
+            if (_сurrentBuildingSquad != null)
+            {
+                _сurrentBuildingSquad.TryRemoveCard(cardItemViewModelBase);
+            }
         }
 
         private SquadManager _squadManager;
@@ -50,6 +59,17 @@ namespace Duelyst.DeckConstructor.ViewModel
             {
                 _сurrentBuildingSquad.Name = value;
                 RaisePropertyChanged(() => CurrentSquadName);
+            }
+        }
+
+        public string CardInDeck
+        {
+            get
+            {
+                var str = "{0}\\{1}";
+                return _сurrentBuildingSquad == null
+                    ? String.Format(str, 0, SquadManager.MaxCardCount)
+                    : String.Format(str, _сurrentBuildingSquad.CardSquadCount, SquadManager.MaxCardCount);
             }
         }
 
@@ -75,28 +95,10 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         private ESquadBuilderModeType _currentBuildMode;
 
-
         /// <summary>
-        /// Выбранная карта
+        /// Обработчик клика на элемент в списке
         /// </summary>
-        public CardItemViewModelBase SelectedCardItem
-        {
-            get { return _selectedCardItem; }
-            set
-            {
-                _selectedCardItem = value;
-                RemoveCard(value);
-
-            }
-        }
-
-        private void RemoveCard(ListItemViewModelBase card)
-        {
-            if (card != null)
-            {
-                _сurrentBuildingSquad.TryRemoveCard(card);
-            }
-        }
+        public ICommand CardItemClickCmd { get; set; }
 
         private void EnterSquadBuilderMode()
         {
@@ -132,7 +134,11 @@ namespace Duelyst.DeckConstructor.ViewModel
 
                 if (!_сurrentBuildingSquad.TryAddCard(card))
                 {
-                 
+
+                }
+                else
+                {
+                    RaisePropertyChanged(() => CardInDeck);
                 }
             }
         }

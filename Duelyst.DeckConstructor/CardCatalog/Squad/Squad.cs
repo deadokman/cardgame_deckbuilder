@@ -75,24 +75,24 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
             get
             {
                 return SquadCardsList.Cast<CardItemViewModelBase>().ToArray();
-            } }
+            }
+        }
 
-        public bool TryRemoveCard(ListItemViewModelBase card)
+        public bool TryRemoveCard(CardItemViewModelBase card)
         {
-            var squadCard = card as CardItemViewModelBase;
-            if (squadCard != null && CardSquadCount.ContainsKey(squadCard.CardId) && !squadCard.Equals(SquadOwner))
+            if (card != null && CardSquadCount.ContainsKey(card.CardId) && !card.Equals(SquadOwner))
             {
-                var cardInSquad = CardSquadCount[squadCard.CardId] - 1;
+                var cardInSquad = CardSquadCount[card.CardId] - 1;
                 if (cardInSquad == 0)
                 {
-                    CardSquadCount.Remove(squadCard.CardId);
+                    CardSquadCount.Remove(card.CardId);
                 }
                 else
                 {
-                    CardSquadCount[squadCard.CardId] = cardInSquad;
+                    CardSquadCount[card.CardId] = cardInSquad;
                 }
 
-                SquadCardsList.Remove(squadCard);
+                SquadCardsList.Remove(card);
                 return true;
             }
 
