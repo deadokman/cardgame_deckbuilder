@@ -120,6 +120,7 @@
     <Compile Include="ForegroudTemple.xaml.cs">
       <DependentUpon>ForegroudTemple.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Pages\CardPresenterPage.xaml.cs">
       <DependentUpon>CardPresenterPage.xaml</DependentUpon>
     </Compile>
@@ -304,6 +305,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pages\UI\Print-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AdditionalResources\imgBg_downgraded_contrast.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AdditionalResources\logo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

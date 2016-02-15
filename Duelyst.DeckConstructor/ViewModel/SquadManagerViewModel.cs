@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog.Squad;
@@ -158,8 +161,8 @@ namespace Duelyst.DeckConstructor.ViewModel
             if (_сurrentBuildingSquad != null)
             {
                 var image =ToPictureProcessor.SquadToImage(_сurrentBuildingSquad);
-            }
 
+            }
         }
 
         public bool CardCollectionMode
