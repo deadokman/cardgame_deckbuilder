@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -43,7 +45,32 @@ namespace Duelyst.DeckConstructor.ViewModel
         {
             using (var webClient = new WebClient())
             {
-                
+                using (var ms = new MemoryStream())
+                {
+                    _imageToDisplay.Save(ms, ImageFormat.Png);
+                    var str = String.Format("image_{0}_{1}", _lastSquadtoDisplay.SquadOwner.Name, _lastSquadtoDisplay.Name);
+                    var url = string.Format(UploadQryUrl, str, 0.222);
+                    var respArr = webClient.UploadData(url, ms.ToArray());
+                    var resp = Encoding.ASCII.GetString(respArr);
+                    try
+                    {
+                        var pars = resp.Split(',');
+                        var par = pars.FirstOrDefault(p => p.Contains("real"));
+                        if (par != null)
+                        {
+                            var addr = par.Split(':');
+                            if (addr.Count() > 1)
+                            {
+                                var imgUrl = addr[2].Replace("\\", String.Empty).PadRight(1);;
+                                System.Diagnostics.Process.Start("http:" + imgUrl);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                }
             }
         }
 
@@ -62,8 +89,6 @@ namespace Duelyst.DeckConstructor.ViewModel
                 }
             }
         }
-
-
 
         private Bitmap _imageToDisplay;
 

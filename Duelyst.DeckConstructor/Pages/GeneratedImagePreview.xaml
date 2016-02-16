@@ -22,7 +22,7 @@
                     </Image>
                 </ScrollViewer>
                 <DockPanel HorizontalAlignment="Center" Grid.Row="1">
-                    <Button ToolTip="Опубликовать" Width="70" Height="70" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Button Command="{Binding UploadComamnd}" ToolTip="Опубликовать" Width="70" Height="70" Style="{DynamicResource MetroCircleButtonStyle}">
                         <Path Fill="White" Width="50" Height="50" Stretch="Uniform" Stroke="white" Data="{Binding Source={StaticResource Upload}}"/>
                     </Button>
                     <Button Command="{Binding PersistImageCommand}" ToolTip="Сохранить" Width="70" Height="70" Style="{DynamicResource MetroCircleButtonStyle}">
