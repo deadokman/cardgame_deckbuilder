@@ -23,7 +23,17 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// </summary>
         [XmlAttribute]
         [DataMember]
-        public string SquadName { get; set; }
+        public string SquadName
+        {
+            get
+            {
+                return base.Name;
+            }
+            set
+            {
+                base.Name = value;
+            }
+        }
 
         /// <summary>
         /// Идентификаторы карт отряда и их количество

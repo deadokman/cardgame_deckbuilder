@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Net;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -10,7 +12,10 @@ using Duelyst.DeckConstructor.CardCatalog.Squad;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+
+using Microsoft.Win32;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
@@ -20,6 +25,8 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         private object _workerLock = new object();
 
+        private const string UploadQryUrl = "http://shot.qip.ru/upload?chk_reduce=on&reduce=1024&file={0}&js={1}";
+
         public GeneratedImagePreviewViewModel()
         {
             Messenger.Default.Register<NavigationMessage>(this, (e) => OnShowMsgRecive(e));
@@ -27,8 +34,36 @@ namespace Duelyst.DeckConstructor.ViewModel
             _redrawWorkerbackground.WorkerSupportsCancellation = false;
             _redrawWorkerbackground.DoWork += RedrawWorkerbackgroundOnDoWork;
             _redrawWorkerbackground.RunWorkerCompleted += RedrawWorkerbackgroundOnRunWorkerCompleted;
+            PersistImageCommand = new RelayCommand(ExecutePersist);
+            UploadComamnd = new RelayCommand(ExecuteUpload);
             ZoomController = 100;
         }
+
+        private void ExecuteUpload()
+        {
+            using (var webClient = new WebClient())
+            {
+                
+            }
+        }
+
+        private void ExecutePersist()
+        {
+            var dlg = new SaveFileDialog();
+            dlg.FileName = String.Format("image_{0}_{1}", _lastSquadtoDisplay.SquadOwner.Name, _lastSquadtoDisplay.Name);
+            dlg.DefaultExt = ".png";
+            dlg.Filter = "Text documents (.png)|*.png";
+            var res = dlg.ShowDialog();
+            if (res != null && res == true)
+            {
+                using (var fw = File.OpenWrite(dlg.FileName))
+                {
+                    _imageToDisplay.Save(fw, ImageFormat.Png);
+                }
+            }
+        }
+
+
 
         private Bitmap _imageToDisplay;
 
@@ -258,6 +293,10 @@ namespace Duelyst.DeckConstructor.ViewModel
                 }
             }
         }
+
+        public  ICommand UploadComamnd { get; set; }
+
+        public ICommand PersistImageCommand { get; set; }
 
         private void OnShowMsgRecive(NavigationMessage msg)
         {

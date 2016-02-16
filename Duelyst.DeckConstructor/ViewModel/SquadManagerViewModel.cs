@@ -170,7 +170,6 @@ namespace Duelyst.DeckConstructor.ViewModel
                 w.Show();
                 Messenger.Default.Send(msg);
                 //
-
             }
         }
 

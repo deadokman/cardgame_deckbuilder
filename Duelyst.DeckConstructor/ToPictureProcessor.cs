@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using Duelyst.DeckConstructor.CardCatalog.Squad;
 
@@ -20,18 +14,50 @@ namespace Duelyst.DeckConstructor
 {
     public static class ToPictureProcessor
     {
+        #region ImageGenerationConfigurationProps
+
         //TODO: Define global config for this:
+        /// <summary>
+        /// Интервал между строками карт
+        /// </summary>
         public static int CardRowIntervalPx = 40;
 
+        /// <summary>
+        /// Интервал между столбцами
+        /// </summary>
         public static int CardColIntervalPx = 20;
 
+        /// <summary>
+        /// Высота рамки по вертикали
+        /// </summary>
         public static int BorderHLength = 60;
 
+        /// <summary>
+        /// Высота рамки по ширине
+        /// </summary>
         public static int BorderWLength = 40;
 
+        /// <summary>
+        /// Число крат в строке
+        /// </summary>
         public static int CardsInrow = 4;
 
+        /// <summary>
+        /// Карт в подложке слоя
+        /// </summary>
         public static int CardDispLayer = 8;
+
+        /// <summary>
+        /// Декремент размера шрифта названия отряда
+        /// </summary>
+        public static int SquadFontScaleFactor = 3;
+
+        /// <summary>
+        /// Декремент размера шрифта названия отряда
+        /// </summary>
+        public static int OffsetSquadNameFactor = 10;
+
+        #endregion
 
         private static Image GetBgImage()
         {
@@ -41,10 +67,44 @@ namespace Duelyst.DeckConstructor
             }
         }
 
+        private static Image GetLogoImage()
+        {
+            using (var st = Assembly.GetExecutingAssembly().GetManifestResourceStream("Duelyst.DeckConstructor.AdditionalResources.kaban_logo.png"))
+            {
+                return new Bitmap(st);
+            }
+        }
+
+        /// <summary>
+        /// Отрисовать текстовые аттрибуты и доп. информацию по колоде
+        /// </summary>
+        /// <param name="squad">Отряд</param>
+        /// <param name="g">Канвасы</param>
+        /// <param name="w">Ширина картинки</param>
+        /// <param name="h">Высота картинки</param>
         private static void DrawLables(Squad squad, Graphics g, int w, int h)
         {
+            var defaultBrush = new SolidBrush(Color.White);
+            var captionTextSize = BorderHLength / SquadFontScaleFactor;
+            var pOffset = BorderHLength / OffsetSquadNameFactor;
             //Расчитать координаты для ссылки на сайт, названия отряда и отрисовать их
-            g.DrawString(squad.SquadName, new Font("Segoe UI", 10), new SolidBrush(Color.White), new PointF(0, 0));
+            DrawCustomText(g, String.Format("{0} - {1}",squad.SquadName, squad.SquadOwner.Name), defaultBrush, captionTextSize, BorderWLength, pOffset);
+            //Поместить лого в подпись
+            //Пересчитать размер лого, перерисовать и поместить на изображение
+
+        }
+
+        private static void DrawCustomText(Graphics g, string text, SolidBrush colorBrush, int size, float px, float py, bool uppecase = true)
+        {
+            var drawFont = new Font("Arial", size, FontStyle.Bold);
+            var drawPoint = new PointF(px, py);
+            var drawFormat = new StringFormat();
+            if (uppecase)
+            {
+                text = text.ToUpper();
+            }
+
+            g.DrawString(text, drawFont, colorBrush, drawPoint, drawFormat);
         }
 
         private static void DrawImageCycled(

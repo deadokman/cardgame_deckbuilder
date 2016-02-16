@@ -21,6 +21,14 @@
                         </Image.RenderTransform>
                     </Image>
                 </ScrollViewer>
+                <DockPanel HorizontalAlignment="Center" Grid.Row="1">
+                    <Button ToolTip="Опубликовать" Width="70" Height="70" Style="{DynamicResource MetroCircleButtonStyle}">
+                        <Path Fill="White" Width="50" Height="50" Stretch="Uniform" Stroke="white" Data="{Binding Source={StaticResource Upload}}"/>
+                    </Button>
+                    <Button Command="{Binding PersistImageCommand}" ToolTip="Сохранить" Width="70" Height="70" Style="{DynamicResource MetroCircleButtonStyle}">
+                        <Path Fill="White" Width="30" Height="30" Stretch="Uniform" Stroke="white" Data="{Binding Source={StaticResource Save}}"/>
+                    </Button>
+                </DockPanel>
             </Grid>
             <Grid Margin="10" Grid.Column="1">
                 <Grid.RowDefinitions>
