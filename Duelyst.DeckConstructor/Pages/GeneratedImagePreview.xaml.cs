@@ -11,13 +11,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Duelyst.DeckConstructor.Pages
 {
     /// <summary>
     /// Interaction logic for GeneratedImagePreview.xaml
     /// </summary>
-    public partial class GeneratedImagePreview : Window
+    public partial class GeneratedImagePreview : MetroWindow
     {
         public GeneratedImagePreview()
         {

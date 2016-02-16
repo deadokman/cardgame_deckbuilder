@@ -49,8 +49,6 @@ namespace Duelyst.DeckConstructor.Pages
             }
         }
 
-        private static ICommand _clickCommand;
-
         public event EventHandler CardClickedHandler;
 
         private void RaiseClicked()

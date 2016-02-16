@@ -57,7 +57,34 @@ namespace Duelyst.DeckConstructor
         /// </summary>
         public static int OffsetSquadNameFactor = 10;
 
+        /// <summary>
+        /// Отображать количество карт
+        /// </summary>
+        public static bool DisplayCardCntOverlay = true;
+
+        /// <summary>
+        /// Размерность шрифта для подписи количества карт
+        /// </summary>
+        public static int OverlayCntFontSize = 25;
+
+        /// <summary>
+        /// Смещение надписи с числом карт относительно самой карты по высоте
+        /// </summary>
+        public static int OverCntOffsetH = 40;
+
+        /// <summary>
+        /// Смещение надписи с числом карт относительно самой карты по высоте
+        /// </summary>
+        public static int OverCntOffsetW = 20;
+
+        /// <summary>
+        /// Контроллер размерности логотипа
+        /// </summary>
+        public static int LogoScaleFactor = 50;
+
         #endregion
+
+        private static int LogoScale;
 
         private static Image GetBgImage()
         {
@@ -82,7 +109,7 @@ namespace Duelyst.DeckConstructor
         /// <param name="g">Канвасы</param>
         /// <param name="w">Ширина картинки</param>
         /// <param name="h">Высота картинки</param>
-        private static void DrawLables(Squad squad, Graphics g, int w, int h)
+        private static void DrawLables(Squad squad, Graphics g, int h, int w)
         {
             var defaultBrush = new SolidBrush(Color.White);
             var captionTextSize = BorderHLength / SquadFontScaleFactor;
@@ -91,7 +118,10 @@ namespace Duelyst.DeckConstructor
             DrawCustomText(g, String.Format("{0} - {1}",squad.SquadName, squad.SquadOwner.Name), defaultBrush, captionTextSize, BorderWLength, pOffset);
             //Поместить лого в подпись
             //Пересчитать размер лого, перерисовать и поместить на изображение
-
+            var logoImg = GetLogoImage().ResizeImage(new Size(LogoScale, LogoScale), false);
+            var wPos = w/2 - BorderWLength - logoImg.Size.Width/2;
+            var hPos = h - BorderHLength - logoImg.Size.Height;
+            g.DrawImage(logoImg, new Point(wPos, hPos));
         }
 
         private static void DrawCustomText(Graphics g, string text, SolidBrush colorBrush, int size, float px, float py, bool uppecase = true)
@@ -121,6 +151,14 @@ namespace Duelyst.DeckConstructor
                 var cptRight = pRight - CardDispLayer * i;
                 var cptDown = pDown - CardDispLayer * i;
                 g.DrawImage(toDraw, new Rectangle(cptRight, cptDown, width, heigth));
+
+                if (i == 1 && DisplayCardCntOverlay)
+                {
+                    var cntTxt = String.Format("X{0}", instanceCount);
+                    var posH = cptDown + heigth - OverCntOffsetH;
+                    var posW = cptRight + width / 2 - OverCntOffsetW;
+                    DrawCustomText(g, cntTxt, new SolidBrush(Color.White), OverlayCntFontSize, posW, posH);
+                }
             }
         }
 
@@ -135,10 +173,11 @@ namespace Duelyst.DeckConstructor
             var uniqueCardsCount = uniqueCardList.Count();
             var rows = Convert.ToInt32(Math.Ceiling((decimal)uniqueCardsCount / CardsInrow));
             //результирующая высота картинки
-            var resultImageH = Convert.ToInt32(ownerHlen * rows + CardRowIntervalPx * rows + BorderHLength * 2);
+            LogoScale = BorderHLength + LogoScaleFactor;
+            var resultImageH = Convert.ToInt32(ownerHlen * rows + CardRowIntervalPx * rows + BorderHLength * 2 + LogoScale);
             var resultImageW = Convert.ToInt32(ownerWlen * CardsInrow + CardColIntervalPx * CardsInrow + BorderWLength * 2);
             var resultImage = new Bitmap(resultImageW, resultImageH);
-            var img = GetBgImage().ResizeImage(new Size(resultImageW, resultImageH));;
+            var img = GetBgImage().ResizeImage(new Size(resultImageW, resultImageH), false);
             using (var canvas = Graphics.FromImage(resultImage))
             {
                 canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -174,9 +213,7 @@ namespace Duelyst.DeckConstructor
                 DrawLables(squad, canvas, resultImageH, resultImageW);
                 canvas.Save();
             }
-#if DEBUG
-            resultImage.Save("test.bmp");
-#endif
+
             return resultImage;
         }
     }

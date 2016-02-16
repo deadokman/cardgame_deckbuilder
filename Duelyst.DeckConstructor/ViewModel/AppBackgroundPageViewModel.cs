@@ -20,7 +20,6 @@ namespace Duelyst.DeckConstructor.ViewModel
         private double _scaleCenterY;
         private double _xScaleMiddle;
         private double _yScaleMiddle;
-        private double _pageHeightExtended;
         private int _selectedMenuTab;
         private bool _isBlurScene;
 

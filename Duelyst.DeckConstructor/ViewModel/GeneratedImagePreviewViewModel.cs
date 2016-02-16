@@ -61,7 +61,7 @@ namespace Duelyst.DeckConstructor.ViewModel
                             var addr = par.Split(':');
                             if (addr.Count() > 1)
                             {
-                                var imgUrl = addr[2].Replace("\\", String.Empty).PadRight(1);;
+                                var imgUrl = addr[2].Replace("\\", String.Empty).Replace("\"", String.Empty);
                                 System.Diagnostics.Process.Start("http:" + imgUrl);
                             }
                         }
@@ -101,13 +101,10 @@ namespace Duelyst.DeckConstructor.ViewModel
                 _imageToDisplay = result;
             }
 
-            lock (_workerLock)
+            if (_redrawNeeded)
             {
-                if (_redrawNeeded)
-                {
-                    _redrawNeeded = false;
-                    _redrawWorkerbackground.RunWorkerAsync(_lastSquadtoDisplay);
-                }
+                _redrawNeeded = false;
+                RedrawImage();
             }
         }
 
@@ -145,6 +142,28 @@ namespace Duelyst.DeckConstructor.ViewModel
         private BackgroundWorker _redrawWorkerbackground;
 
         #region Bindable props
+
+        public int LogoScale
+        {
+            get { return ToPictureProcessor.LogoScaleFactor; }
+            set
+            {
+                ToPictureProcessor.LogoScaleFactor = value;
+                RaisePropertyChanged(() => LogoScale);
+                RedrawImage();
+            }
+        }
+
+        public int SquadFontScaleFactor
+        {
+            get { return ToPictureProcessor.SquadFontScaleFactor; }
+            set
+            {
+                ToPictureProcessor.SquadFontScaleFactor = value;
+                RaisePropertyChanged(() => SquadFontScaleFactor);
+                RedrawImage();
+            }
+        }
 
         public double ImageControllScale
         {
@@ -188,6 +207,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             set
             {
                 ToPictureProcessor.CardRowIntervalPx = value;
+                RaisePropertyChanged(() => RowInterval);
                 RedrawImage();
             }
         }
@@ -204,6 +224,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             set
             {
                 ToPictureProcessor.CardColIntervalPx = value;
+                RaisePropertyChanged(() => ColInterval);
                 RedrawImage();
             }
         }
@@ -220,6 +241,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             set
             {
                 ToPictureProcessor.CardsInrow = value;
+                RaisePropertyChanged(() => CardInRow);
                 RedrawImage();
             }
         }
@@ -236,6 +258,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             set
             {
                 ToPictureProcessor.BorderHLength = value;
+                RaisePropertyChanged(() => BorderH);
                 RedrawImage();
             }
         }
@@ -252,6 +275,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             set
             {
                 ToPictureProcessor.BorderWLength = value;
+                RaisePropertyChanged(() => BorderW);
                 RedrawImage();
             }
         }
@@ -268,6 +292,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             set
             {
                 ToPictureProcessor.CardDispLayer = value;
+                RaisePropertyChanged(() => CardDistSublayer);
                 RedrawImage();
             }
         }
@@ -306,16 +331,13 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         private void RedrawImage()
         {
-            lock (_workerLock)
+            if (!_redrawWorkerbackground.IsBusy)
             {
-                if (!_redrawWorkerbackground.IsBusy)
-                {
-                    _redrawWorkerbackground.RunWorkerAsync(_lastSquadtoDisplay);
-                }
-                else
-                {
-                    _redrawNeeded = true;
-                }
+                _redrawWorkerbackground.RunWorkerAsync(_lastSquadtoDisplay);
+            }
+            else
+            {
+                _redrawNeeded = true;
             }
         }
 

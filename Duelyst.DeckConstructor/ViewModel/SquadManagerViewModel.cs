@@ -156,7 +156,6 @@ namespace Duelyst.DeckConstructor.ViewModel
             get
             {
                 return !_cardCollectionObserverMod;
-
             }
         }
 
@@ -188,7 +187,6 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
         private bool _cardCollectionObserverMod;
-        private CardItemViewModelBase _selectedCardItem;
         private ObservableCollection<ListItemViewModelBase> _cardListItems;
     }
 }
