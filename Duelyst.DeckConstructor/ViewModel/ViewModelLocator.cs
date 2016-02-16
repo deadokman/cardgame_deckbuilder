@@ -32,7 +32,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             SimpleIoc.Default.Register<MenuViewModel>();
             SimpleIoc.Default.Register<DeckConstructorViewModel>();
             SimpleIoc.Default.Register<SquadManagerViewModel>();
-
+            SimpleIoc.Default.Register<GeneratedImagePreviewViewModel>();
         }
 
         public MainViewModel Main
@@ -66,6 +66,14 @@ namespace Duelyst.DeckConstructor.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<SquadManagerViewModel>();
+            }
+        }
+
+        public GeneratedImagePreviewViewModel ImagePreviewViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<GeneratedImagePreviewViewModel>();
             }
         }
 

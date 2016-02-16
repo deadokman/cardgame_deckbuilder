@@ -127,6 +127,9 @@
     <Compile Include="Pages\DeckConstructorSpellBook.xaml.cs">
       <DependentUpon>DeckConstructorSpellBook.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\GeneratedImagePreview.xaml.cs">
+      <DependentUpon>GeneratedImagePreview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\MainAppPage.xaml.cs">
       <DependentUpon>MainAppPage.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,7 @@
     <Compile Include="ViewModel\DeckCardItem\CardItemViewModelBase.cs" />
     <Compile Include="ViewModel\DeckCardItem\ListItemViewModelBase.cs" />
     <Compile Include="ViewModel\DeckConstructorViewModel.cs" />
+    <Compile Include="ViewModel\GeneratedImagePreviewViewModel.cs" />
     <Compile Include="ViewModel\Ifaces\CardDisplayObjects\CustomDisplayFilter.cs" />
     <Compile Include="ViewModel\Ifaces\CardDisplayObjects\FilterSelectionChanged.cs" />
     <Compile Include="ViewModel\Ifaces\CardDisplayObjects\IDisplayadble.cs" />
@@ -190,6 +194,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\DeckConstructorSpellBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\GeneratedImagePreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

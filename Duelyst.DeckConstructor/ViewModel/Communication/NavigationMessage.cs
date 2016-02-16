@@ -1,4 +1,8 @@
-﻿namespace Duelyst.DeckConstructor.ViewModel.Communication
+﻿using System.Drawing;
+
+using Duelyst.DeckConstructor.CardCatalog.Squad;
+
+namespace Duelyst.DeckConstructor.ViewModel.Communication
 {
     public  class NavigationMessage
     {
@@ -8,5 +12,7 @@
         }
 
         public CommEventType CommMsgType { get; protected set; }
+
+        public Squad SquadToDisplay { get; set; }
     }
 }

@@ -1,0 +1,69 @@
+﻿<Window x:Class="Duelyst.DeckConstructor.Pages.GeneratedImagePreview"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GeneratedImagePreview" 
+        Height="800" Width="1200" DataContext="{Binding Source={StaticResource Locator}, Path=ImagePreviewViewModel}" Background="Black">
+    <Grid>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width=".3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid  Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height=".1*"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0" Background="DimGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible">
+                    <Image Source="{Binding DisplayableImage}" Stretch="None" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Image.RenderTransform>
+                            <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ImageControllScale}" ScaleY="{Binding ImageControllScale}"/>
+                        </Image.RenderTransform>
+                    </Image>
+                </ScrollViewer>
+            </Grid>
+            <Grid Margin="10" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="0">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Интервал между строками:"/>
+                    <Slider Value="{Binding RowInterval, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="0" Maximum="200"/>
+                </StackPanel>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="1">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Интервал между столбцами.:"/>
+                    <Slider Value="{Binding ColInterval, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="0" Maximum="200"/>
+                </StackPanel>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="2">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Карт в строке:"/>
+                    <Slider Value="{Binding CardInRow, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="1" Maximum="10"/>
+                </StackPanel>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="3">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Ширина полей по вертикали:"/>
+                    <Slider Value="{Binding BorderH, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="0" Maximum="200"/>
+                </StackPanel>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="4">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Ширина полей по горизонтали:"/>
+                    <Slider Value="{Binding BorderW, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="0" Maximum="200"/>
+                </StackPanel>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="5">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Расстояние между слоями:"/>
+                    <Slider  Value="{Binding CardDistSublayer, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="0" Maximum="200"/>
+                </StackPanel>
+                <!--Разделитель и контроллы для предпросмотра-->
+                <Rectangle  Grid.Row="6" Fill="Aqua" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <StackPanel Margin="2" HorizontalAlignment="Stretch" Grid.Row="7">
+                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Left" FontWeight="ExtraLight" FontSize="15"  Content="Зум"/>
+                    <Slider  Value="{Binding ZoomController, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Minimum="0" Maximum="100"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

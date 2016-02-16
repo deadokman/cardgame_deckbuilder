@@ -3,6 +3,8 @@ using System.Windows.Media.Imaging;
 using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 
+using GalaSoft.MvvmLight;
+
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
     public class CardItemViewModelBase : ListItemViewModelBase, IDisplayadble, IEquatable<CardItemViewModelBase>

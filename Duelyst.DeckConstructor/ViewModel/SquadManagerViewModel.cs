@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog.Squad;
+using Duelyst.DeckConstructor.Pages;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
@@ -33,11 +31,11 @@ namespace Duelyst.DeckConstructor.ViewModel
             Strategys.Add(ESquadBuilderModeType.CollectionMode, new CollectionDisplayStrategy());
             Strategys.Add(ESquadBuilderModeType.GeneralSelectMode, new GeneralSelectStrategy());
             _currentBuildMode = ESquadBuilderModeType.CollectionMode;
-            CardItemClickCmd = new RelayCommand<CardItemViewModelBase>(OnCardItemClic);
+            CardItemClickCmd = new RelayCommand<CardItemViewModelBase>(OnCardItemClick);
             MessengerInstance.Send(Strategys[_currentBuildMode]);
         }
 
-        private void OnCardItemClic(CardItemViewModelBase cardItemViewModelBase)
+        private void OnCardItemClick(CardItemViewModelBase cardItemViewModelBase)
         {
             if (_сurrentBuildingSquad != null)
             {
@@ -166,7 +164,12 @@ namespace Duelyst.DeckConstructor.ViewModel
         {
             if (_сurrentBuildingSquad != null)
             {
-                var image =ToPictureProcessor.SquadToImage(_сurrentBuildingSquad);
+                var msg = new NavigationMessage(CommEventType.WindowPreview);
+                msg.SquadToDisplay = _сurrentBuildingSquad;
+                var w = new GeneratedImagePreview();
+                w.Show();
+                Messenger.Default.Send(msg);
+                //
 
             }
         }

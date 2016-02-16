@@ -67,6 +67,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Provider
                             bi.StreamSource = new MemoryStream(stream.ToArray());
                             bi.EndInit();
                             dict.Add(entry.FileName, bi);
+                            bi.Freeze();
                         }
                     }
                 }

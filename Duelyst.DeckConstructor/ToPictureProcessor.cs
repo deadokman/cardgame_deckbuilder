@@ -14,7 +14,6 @@ using Duelyst.DeckConstructor.CardCatalog.Squad;
 
 using Color = System.Drawing.Color;
 using Image = System.Drawing.Image;
-using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
 
 namespace Duelyst.DeckConstructor
@@ -22,21 +21,20 @@ namespace Duelyst.DeckConstructor
     public static class ToPictureProcessor
     {
         //TODO: Define global config for this:
-        private static int _cardRowIntervalPx = 40;
+        public static int CardRowIntervalPx = 40;
 
-        private static int _cardColIntervalPx = 20;
+        public static int CardColIntervalPx = 20;
 
-        private static int _borderHLength = 60;
+        public static int BorderHLength = 60;
 
-        private static int _borderWLength = 40;
+        public static int BorderWLength = 40;
 
-        private static int _cardsInrow = 4;
+        public static int CardsInrow = 4;
 
-        private static int _cardDispLayer = 8;
+        public static int CardDispLayer = 8;
 
         private static Image GetBgImage()
         {
-            var names = Assembly.GetExecutingAssembly().GetManifestResourceNames();
             using (var st = Assembly.GetExecutingAssembly().GetManifestResourceStream("Duelyst.DeckConstructor.AdditionalResources.imgBg_downgraded_contrast.png"))
             {
                 return new Bitmap(st);
@@ -60,13 +58,13 @@ namespace Duelyst.DeckConstructor
         {
             for (var i = instanceCount; i > 0; i--)
             {
-                var cptRight = pRight - _cardDispLayer * i;
-                var cptDown = pDown - _cardDispLayer * i;
+                var cptRight = pRight - CardDispLayer * i;
+                var cptDown = pDown - CardDispLayer * i;
                 g.DrawImage(toDraw, new Rectangle(cptRight, cptDown, width, heigth));
             }
         }
 
-        public static Image SquadToImage(Squad squad)
+        public static Bitmap SquadToImage(Squad squad)
         {
             //Предполагается, что все карты одного разрешения
             //Получить разрешение карты владельца отряда
@@ -75,10 +73,10 @@ namespace Duelyst.DeckConstructor
             //Получить общее количество уникальных карт в отряде
             var uniqueCardList = squad.SquadCards.Skip(1).Distinct().ToArray();
             var uniqueCardsCount = uniqueCardList.Count();
-            var rows = Convert.ToInt32(Math.Ceiling((decimal)uniqueCardsCount / _cardsInrow));
+            var rows = Convert.ToInt32(Math.Ceiling((decimal)uniqueCardsCount / CardsInrow));
             //результирующая высота картинки
-            var resultImageH = Convert.ToInt32(ownerHlen * rows + _cardRowIntervalPx * rows + _borderHLength * 2);
-            var resultImageW = Convert.ToInt32(ownerWlen * _cardsInrow + _cardColIntervalPx * _cardsInrow + _borderWLength * 2);
+            var resultImageH = Convert.ToInt32(ownerHlen * rows + CardRowIntervalPx * rows + BorderHLength * 2);
+            var resultImageW = Convert.ToInt32(ownerWlen * CardsInrow + CardColIntervalPx * CardsInrow + BorderWLength * 2);
             var resultImage = new Bitmap(resultImageW, resultImageH);
             var img = GetBgImage().ResizeImage(new Size(resultImageW, resultImageH));;
             using (var canvas = Graphics.FromImage(resultImage))
@@ -87,16 +85,16 @@ namespace Duelyst.DeckConstructor
                 //Нарисовать подложку, определить множитель увеличения по высоте
                 //и добавить к ширине
                 canvas.DrawImage(img, new Rectangle(0, 0, resultImageW, resultImageH));
-                for (int col = 0; col < _cardsInrow; col++)
+                for (int col = 0; col < CardsInrow; col++)
                 {
-                    var rightStepOver = Convert.ToInt32((col * ownerWlen) + _cardColIntervalPx) + _borderWLength;
+                    var rightStepOver = Convert.ToInt32((col * ownerWlen) + CardColIntervalPx * col) + BorderWLength;
                     for (int row = 0; row < rows; row++)
                     {
-                        var idx = row * _cardsInrow + col;
+                        var idx = row * CardsInrow + col;
                         if (idx < uniqueCardsCount)
                         {
                             var card = uniqueCardList[idx];
-                            var downStepOver = Convert.ToInt32((row * ownerHlen) + _cardRowIntervalPx) + _borderHLength;
+                            var downStepOver = Convert.ToInt32((row * ownerHlen) + CardRowIntervalPx * row) + BorderHLength;
                             DrawImageCycled(
                                 canvas,
                                 new Bitmap(card.Image.StreamSource),

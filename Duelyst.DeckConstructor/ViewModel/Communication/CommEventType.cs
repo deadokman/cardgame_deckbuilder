@@ -7,6 +7,7 @@
         SelectSquadLeaderMode,
         Exit,
         MainMenu,
+        WindowPreview,
         Load
     }
 }

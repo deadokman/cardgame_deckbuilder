@@ -9,7 +9,7 @@ using GalaSoft.MvvmLight;
 
 namespace Duelyst.DeckConstructor.ViewModel.DeckCardItem
 {
-    
+
     public class ListItemViewModelBase : ViewModelBase
     {
         [XmlIgnore]
