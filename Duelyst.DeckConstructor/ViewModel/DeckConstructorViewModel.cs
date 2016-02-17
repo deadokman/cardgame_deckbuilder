@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Duelyst.DeckConstructor.CardCatalog;
 using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects;
 using GalaSoft.MvvmLight.CommandWpf;
+using Timer = System.Timers.Timer;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
@@ -47,6 +49,35 @@ namespace Duelyst.DeckConstructor.ViewModel
             {
                 _navigationButtonsEnabled = value;
                 RaisePropertyChanged(() => NavigationButtonsEnabled);
+            }
+        }
+
+        /// <summary>
+        /// Отобразить попап
+        /// </summary>
+        public bool ShowPopup
+        {
+            get { return _showPopup; }
+            set
+            {
+                _showPopup = value;
+                if (value && !_timerCounting)
+                {
+                    _timerCounting = true;
+                    _popUpCloseTimer.Start();
+                }
+
+                RaisePropertyChanged(() => ShowPopup);
+            }
+        }
+
+        public string PopUpText
+        {
+            get { return _popUpText; }
+            set
+            {
+                _popUpText = value;
+                RaisePropertyChanged(() => PopUpText);
             }
         }
 
@@ -109,6 +140,10 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         private IDisplayableFilter _selectedFilter;
         private ObservableCollection<IDisplayableFilter> _cardFilters;
+        private bool _showPopup;
+        private string _popUpText;
+        private Timer _popUpCloseTimer;
+        private bool _timerCounting;
 
 
         public DeckConstructorViewModel()
@@ -119,8 +154,17 @@ namespace Duelyst.DeckConstructor.ViewModel
             CardClickedCommand = new GalaSoft.MvvmLight.Command.RelayCommand<CardItemViewModelBase>(OnCardClicked);
             ListRight = new RelayCommand(OnCardListRightCallback);
             ListLeft = new RelayCommand(OnCardListLeftCallback);
-            MessengerInstance.Register<IDisplayStrategy>(this, OnNavMessageRecive);
+            MessengerInstance.Register<IDisplayStrategy>(this, OnDisplayMessageRecive);
+            MessengerInstance.Register<CommunicationMessage>(this, OnCommMessageRecive);
             NavigationButtonsEnabled = true;
+            //
+            _popUpCloseTimer = new Timer(2000);
+            _popUpCloseTimer.AutoReset = true;
+            _popUpCloseTimer.Elapsed += (sender, args) =>
+            {
+                ShowPopup = false;
+                _timerCounting = false;
+            };
         }
 
         public void SetDisplayFilters(IEnumerable<IDisplayableFilter> filters)
@@ -229,7 +273,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             CurrentPage = CurrentPage + 1;
         }
 
-        private void OnNavMessageRecive(IDisplayStrategy message)
+        private void OnDisplayMessageRecive(IDisplayStrategy message)
         {
             if (message != null)
             {
@@ -266,6 +310,18 @@ namespace Duelyst.DeckConstructor.ViewModel
                 foreach (var filter in CardFilters)
                 {
                     filter.Selected -= FilterOnSelectedChanged;
+                }
+            }
+        }
+
+        private void OnCommMessageRecive(CommunicationMessage msg)
+        {
+            if (msg.CommMsgType == CommEventType.CardAddResponseMessage)
+            {
+                if (msg.CardAddResponse != null)
+                {
+                    ShowPopup = true;
+                    PopUpText = msg.CardAddResponse.ResponseMessage;
                 }
             }
         }

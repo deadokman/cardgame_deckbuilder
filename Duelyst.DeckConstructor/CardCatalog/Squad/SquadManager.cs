@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Media;
 using System.Xml.Serialization;
+using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 
 namespace Duelyst.DeckConstructor.CardCatalog.Squad
@@ -78,9 +78,10 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                     {
                         var squad = (Squad)_squadSeri.Deserialize(stream);
                         _squads.Add(squad.SquadName, squad);
-                        foreach (var card in squad.CardSquadCount)
+                        CardAddResponse resp;
+                        foreach (var card in squad.CardCountingCollection)
                         {
-                            squad.TryAddCard(_catalog[card.Key]);
+                            squad.TryAddCard(_catalog[card.Key], out resp);
                         }
                     }
                     catch (Exception ex)
@@ -89,6 +90,21 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
                     }
                 }
             }
+        }
+
+        public void StoreSquadToDefaultLocation(Squad squad)
+        {
+            var squadFolder = Path.Combine(Directory.GetCurrentDirectory(), SquadFolderName);
+            if (!!Directory.Exists(squadFolder))
+            {
+                Directory.CreateDirectory(squadFolder);
+            }
+
+            var file = Path.Combine(squadFolder, String.Format("{0}_{1}.squad", squad.Name, squad.SquadOwner.Name));
+            using (var fs = File.Open(file, FileMode.OpenOrCreate))
+            {
+                _squadSeri.Serialize(fs, squad);
+            }       
         }
 
         public Squad InitNewSquad(CardGeneral general)

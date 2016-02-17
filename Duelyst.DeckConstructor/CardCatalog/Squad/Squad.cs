@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Duelyst.DeckConstructor.ViewModel;
+using Duelyst.DeckConstructor.ViewModel.Communication;
 using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 
 namespace Duelyst.DeckConstructor.CardCatalog.Squad
@@ -14,8 +16,14 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         public Squad()
         {
             SquadErrors = new List<SquadBuildError>();
-            CardSquadCount = new Dictionary<string, int>();
+            CardCountingCollection = new Dictionary<string, int>();
             SquadCardsList = new ObservableCollection<ListItemViewModelBase>();
+        }
+
+        [XmlIgnore]
+        public int CardsInSquad
+        {
+            get { return SquadCardsList.Count; }
         }
 
         /// <summary>
@@ -27,11 +35,11 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         {
             get
             {
-                return base.Name;
+                return Name;
             }
             set
             {
-                base.Name = value;
+                Name = value;
             }
         }
 
@@ -42,10 +50,10 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         [DataMember]
         public KeyValuePair<string, int>[] CardSquadCountData
         {
-            get { return CardSquadCount.Select(p => p).ToArray(); }
+            get { return CardCountingCollection.Select(p => p).ToArray(); }
             set
             {
-                CardSquadCount = value.ToDictionary(p => p.Key, p => p.Value);
+                CardCountingCollection = value.ToDictionary(p => p.Key, p => p.Value);
             }
         }
 
@@ -60,7 +68,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         public bool IsBroken { get; private set; }
 
         [XmlIgnore]
-        public Dictionary<string, int> CardSquadCount { get; set; }
+        public Dictionary<string, int> CardCountingCollection { get; set; }
 
         /// <summary>
         /// Ошибки связанные с потстроением отряда
@@ -90,16 +98,16 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
 
         public bool TryRemoveCard(CardItemViewModelBase card)
         {
-            if (card != null && CardSquadCount.ContainsKey(card.CardId) && !card.Equals(SquadOwner))
+            if (card != null && CardCountingCollection.ContainsKey(card.CardId) && !card.Equals(SquadOwner))
             {
-                var cardInSquad = CardSquadCount[card.CardId] - 1;
+                var cardInSquad = CardCountingCollection[card.CardId] - 1;
                 if (cardInSquad == 0)
                 {
-                    CardSquadCount.Remove(card.CardId);
+                    CardCountingCollection.Remove(card.CardId);
                 }
                 else
                 {
-                    CardSquadCount[card.CardId] = cardInSquad;
+                    CardCountingCollection[card.CardId] = cardInSquad;
                 }
 
                 SquadCardsList.Remove(card);
@@ -133,46 +141,62 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// Добавить карту к отряду
         /// </summary>
         /// <param name="card">Новая карта</param>
-        public bool TryAddCard(CardItemViewModelBase card)
+        /// <param name="resp"></param>
+        public bool TryAddCard(CardItemViewModelBase card, out CardAddResponse resp)
         {
+            resp = new CardAddResponse();
             if (card.Owner != null && (!card.Owner.Equals(SquadOwner) && !card.Owner.IsNetural))
             {
+                resp.ResponseType = EResponseType.OwnerError;
                 return false;
             }
             else if (card.Owner == null)
             {
+                resp.ResponseType = EResponseType.OwnerError;
                 //TODO: PROCESS
             }
 
+            if (CardsInSquad == SquadManager.MaxCardCount)
+            {
+                resp.ResponseType = EResponseType.SquadLimit;
+                return false;
+            }
+            else if(CardsInSquad > SquadManager.MaxCardCount)
+            {
+                MarkSquadBroken("В отряде больше карт чем допустимо в игре");
+            }
+
             int squadCount;
-            if (CardSquadCount.TryGetValue(card.CardId, out squadCount))
+            if (CardCountingCollection.TryGetValue(card.CardId, out squadCount))
             {
                 if (squadCount == card.MaxInDeck)
                 {
+                    resp.ResponseType = EResponseType.CardInstanceLimit;
                     return false;
                 }
 
                 if (squadCount > card.MaxInDeck)
                 {
                     //Пометить отряд как сломанный
-                    IsBroken = true;
-                    SquadErrors.Add(new SquadBuildError(
-                        String.Format("В отряде {0} добавлено карт с ID {1} - {2} хотя допустимо {3}", 
-                            this.SquadName, card.CardId, squadCount, card.MaxInDeck)));
-                    return false;
+                    MarkSquadBroken(String.Format("В отряде {0} добавлено карт с ID {1} - {2} хотя допустимо {3}",
+                    SquadName, card.CardId, squadCount, card.MaxInDeck));
                 }
 
-                CardSquadCount[card.CardId] = squadCount + 1;
+                CardCountingCollection[card.CardId] = squadCount + 1;
             }
             else
             {
-                CardSquadCount[card.CardId] = 1;
+                CardCountingCollection[card.CardId] = 1;
             }
 
             AddCardInorder(card);
             return true;
         }
 
-
+        private void MarkSquadBroken(string msg)
+        {
+            IsBroken = true;
+            SquadErrors.Add(new SquadBuildError(msg));
+        }
     }
 }

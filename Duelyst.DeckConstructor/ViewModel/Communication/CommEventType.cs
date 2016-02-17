@@ -8,6 +8,7 @@
         Exit,
         MainMenu,
         WindowPreview,
-        Load
+        Load,
+        CardAddResponseMessage
     }
 }

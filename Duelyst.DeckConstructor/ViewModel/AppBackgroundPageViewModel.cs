@@ -32,10 +32,10 @@ namespace Duelyst.DeckConstructor.ViewModel
             XScaleFront = 1;
             YScaleFront = 1;
             SelectedMenuTab = 0;
-            Messenger.Default.Register<NavigationMessage>(this, ResolveCommMessage);
+            Messenger.Default.Register<CommunicationMessage>(this, ResolveCommMessage);
         }
 
-        private void ResolveCommMessage(NavigationMessage navMess)
+        private void ResolveCommMessage(CommunicationMessage navMess)
         {
             switch (navMess.CommMsgType)
             {

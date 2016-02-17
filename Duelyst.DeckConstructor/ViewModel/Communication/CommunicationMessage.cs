@@ -4,9 +4,9 @@ using Duelyst.DeckConstructor.CardCatalog.Squad;
 
 namespace Duelyst.DeckConstructor.ViewModel.Communication
 {
-    public  class NavigationMessage
+    public  class CommunicationMessage
     {
-        public NavigationMessage(CommEventType type)
+        public CommunicationMessage(CommEventType type)
         {
             CommMsgType = type;
         }
@@ -14,5 +14,7 @@ namespace Duelyst.DeckConstructor.ViewModel.Communication
         public CommEventType CommMsgType { get; protected set; }
 
         public Squad SquadToDisplay { get; set; }
+
+        public CardAddResponse CardAddResponse { get; set; }
     }
 }

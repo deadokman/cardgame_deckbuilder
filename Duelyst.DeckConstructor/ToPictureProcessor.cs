@@ -201,7 +201,7 @@ namespace Duelyst.DeckConstructor
                                 downStepOver,
                                 ownerWlen,
                                 ownerHlen,
-                                squad.CardSquadCount[card.CardId]);
+                                squad.CardCountingCollection[card.CardId]);
                         }
                         else
                         {

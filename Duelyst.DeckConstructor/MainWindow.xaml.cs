@@ -26,10 +26,10 @@ namespace Duelyst.DeckConstructor
         public MainWindow()
         {
             InitializeComponent();
-            Messenger.Default.Register<NavigationMessage>(this, HandleNavMessage);
+            Messenger.Default.Register<CommunicationMessage>(this, HandleNavMessage);
         }
 
-        private void HandleNavMessage(NavigationMessage navMessage)
+        private void HandleNavMessage(CommunicationMessage navMessage)
         {
             switch (navMessage.CommMsgType)
             {

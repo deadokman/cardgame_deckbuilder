@@ -178,6 +178,13 @@
                     
                     <!--Контролл отображения карт-->
                     <local:CardPresenterPage Margin="5" Grid.Column="0" Command="{Binding CardClickedCommand}" CardSource="{Binding ItemsToDisplay, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    <Popup x:Name="MsgPopup" StaysOpen="False" IsOpen="{Binding ShowPopup}" Placement="Mouse" MaxWidth="180"
+                         AllowsTransparency="True">
+                        <Grid Background="Black" Opacity="40">
+                            <TextBlock Foreground="White" TextWrapping="Wrap" Text="{Binding PopUpText}"/>
+                        </Grid>
+
+                    </Popup>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -281,6 +288,10 @@
                 <DockPanel Grid.Row="4" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}">
                     <Label HorizontalAlignment="Right" BorderThickness="0" BorderBrush="Transparent" FontSize="12" FontWeight="ExtraLight"  Content="КАРТ ДОБАВЛЕНО: "/>
                     <TextBlock HorizontalAlignment="Left" Background="Transparent" FontSize="12" FontWeight="ExtraLight" Text="{Binding CardInDeck}" />
+                </DockPanel>
+                <DockPanel Grid.Row="5" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}">
+                    <Button Content="СОХРАНИТЬ"></Button>
+                    <Button Content="ОТМЕНА"></Button>
                 </DockPanel>
             </Grid>
         </Grid>

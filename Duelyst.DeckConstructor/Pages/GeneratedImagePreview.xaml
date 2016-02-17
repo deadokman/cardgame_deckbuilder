@@ -88,5 +88,7 @@
                 </StackPanel>
             </Grid>
         </Grid>
+
     </Grid>
+
 </controls:MetroWindow>

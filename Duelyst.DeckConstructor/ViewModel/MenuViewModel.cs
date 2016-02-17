@@ -21,12 +21,12 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         private void NotfyNewDeck()
         {
-            Messenger.Default.Send(new NavigationMessage(CommEventType.NewDeck));
+            Messenger.Default.Send(new CommunicationMessage(CommEventType.NewDeck));
         }
 
         private void NotfyClose()
         {
-            Messenger.Default.Send(new NavigationMessage(CommEventType.Exit));
+            Messenger.Default.Send(new CommunicationMessage(CommEventType.Exit));
         }
     }
 }

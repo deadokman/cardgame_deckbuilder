@@ -67,7 +67,7 @@ namespace Duelyst.DeckConstructor.ViewModel
                 var str = "{0}\\{1}";
                 return _сurrentBuildingSquad == null
                     ? String.Format(str, 0, SquadManager.MaxCardCount)
-                    : String.Format(str, _сurrentBuildingSquad.CardSquadCount, SquadManager.MaxCardCount);
+                    : String.Format(str, _сurrentBuildingSquad.CardsInSquad, SquadManager.MaxCardCount);
             }
         }
 
@@ -109,6 +109,7 @@ namespace Duelyst.DeckConstructor.ViewModel
             var card = message.Card;
             if (!CardCollectionMode)
             {
+                PersistButtonAvaileble = false;
                 //Если в режиме сбора отряда
                 //TODO:Произвести проверку возможности добавления карты в текущий отряд, выполнить добавление
                 var general = card as CardGeneral;
@@ -130,25 +131,19 @@ namespace Duelyst.DeckConstructor.ViewModel
                     throw new Exception("Не создан экземпляр нового отряда");
                 }
 
-                if (!_сurrentBuildingSquad.TryAddCard(card))
+                CardAddResponse resp;
+                if (!_сurrentBuildingSquad.TryAddCard(card, out resp))
                 {
-
+                    var commMsg = new CommunicationMessage(CommEventType.CardAddResponseMessage);
+                    commMsg.CardAddResponse = resp;
+                    Messenger.Default.Send(commMsg);
                 }
                 else
                 {
                     RaisePropertyChanged(() => CardInDeck);
+                    PersistButtonAvaileble = _сurrentBuildingSquad.CardsInSquad == SquadManager.MaxCardCount;
                 }
             }
-        }
-
-        private void BuildSquadCollectionItems()
-        {
-            
-        }
-
-        private void TryAddCardToSquad()
-        {
-            
         }
 
         public bool SquadBuilderMode
@@ -163,7 +158,7 @@ namespace Duelyst.DeckConstructor.ViewModel
         {
             if (_сurrentBuildingSquad != null)
             {
-                var msg = new NavigationMessage(CommEventType.WindowPreview);
+                var msg = new CommunicationMessage(CommEventType.WindowPreview);
                 msg.SquadToDisplay = _сurrentBuildingSquad;
                 var w = new GeneratedImagePreview();
                 w.Show();
@@ -172,6 +167,22 @@ namespace Duelyst.DeckConstructor.ViewModel
             }
         }
 
+        /// <summary>
+        /// Доступность кнопки сохранения отряда
+        /// </summary>
+        public bool PersistButtonAvaileble
+        {
+            get { return _persistButtonAvaileble; }
+            set
+            {
+                _persistButtonAvaileble = value; 
+                RaisePropertyChanged(() => PersistButtonAvaileble);
+            }
+        }
+
+        /// <summary>
+        /// Режим редактирования коллекции карт
+        /// </summary>
         public bool CardCollectionMode
         {
             get
@@ -186,7 +197,9 @@ namespace Duelyst.DeckConstructor.ViewModel
                 RaisePropertyChanged(() => SquadBuilderMode);
             }
         }
+
         private bool _cardCollectionObserverMod;
         private ObservableCollection<ListItemViewModelBase> _cardListItems;
+        private bool _persistButtonAvaileble;
     }
 }

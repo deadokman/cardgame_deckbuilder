@@ -31,7 +31,7 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         public GeneratedImagePreviewViewModel()
         {
-            Messenger.Default.Register<NavigationMessage>(this, (e) => OnShowMsgRecive(e));
+            Messenger.Default.Register<CommunicationMessage>(this, (e) => OnShowMsgRecive(e));
             _redrawWorkerbackground = new BackgroundWorker();
             _redrawWorkerbackground.WorkerSupportsCancellation = false;
             _redrawWorkerbackground.DoWork += RedrawWorkerbackgroundOnDoWork;
@@ -345,7 +345,7 @@ namespace Duelyst.DeckConstructor.ViewModel
 
         public ICommand PersistImageCommand { get; set; }
 
-        private void OnShowMsgRecive(NavigationMessage msg)
+        private void OnShowMsgRecive(CommunicationMessage msg)
         {
             if (msg.CommMsgType == CommEventType.WindowPreview)
             {
