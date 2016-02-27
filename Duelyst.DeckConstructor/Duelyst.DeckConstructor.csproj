@@ -113,8 +113,10 @@
     <Compile Include="CardCatalog\ECardType.cs" />
     <Compile Include="CardCatalog\Provider\ICardProvider.cs" />
     <Compile Include="CardCatalog\Provider\LocalCardDataProvider.cs" />
+    <Compile Include="CardCatalog\Squad\DtoCardCountInfo.cs" />
     <Compile Include="CardCatalog\Squad\Squad.cs" />
     <Compile Include="CardCatalog\Squad\SquadBuildError.cs" />
+    <Compile Include="CardCatalog\Squad\SquadDto.cs" />
     <Compile Include="CardCatalog\Squad\SquadManager.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ForegroudTemple.xaml.cs">

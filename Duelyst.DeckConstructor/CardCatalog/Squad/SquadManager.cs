@@ -52,16 +52,11 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
 
         public void InitializeSquads()
         {
-            try
-            {
-                //Прикол с инициализацией данного варианта конструктора из-за IL инъекций кода внутри класса
-                //что приводит к CLR ошибки не влияющей в конечном счете на работу экземпляра. Microsoft sucks!
-                //http://stackoverflow.com/questions/3494886/filenotfoundexception-in-applicationsettingsbase
-                _squadSeri = new XmlSerializer(typeof(Squad));
-            }
-            catch (Exception)
-            {
-            }
+            //Прикол с инициализацией данного варианта конструктора из-за IL инъекций кода внутри класса
+            //что приводит к CLR ошибки не влияющей в конечном счете на работу экземпляра. Microsoft sucks!
+            //http://stackoverflow.com/questions/3494886/filenotfoundexception-in-applicationsettingsbase
+            _squadSeri = new XmlSerializer(typeof(SquadDto));
+
 
             var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SquadFolderName));
             if (!dir.Exists)
@@ -95,7 +90,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         public void StoreSquadToDefaultLocation(Squad squad)
         {
             var squadFolder = Path.Combine(Directory.GetCurrentDirectory(), SquadFolderName);
-            if (!!Directory.Exists(squadFolder))
+            if (!Directory.Exists(squadFolder))
             {
                 Directory.CreateDirectory(squadFolder);
             }
