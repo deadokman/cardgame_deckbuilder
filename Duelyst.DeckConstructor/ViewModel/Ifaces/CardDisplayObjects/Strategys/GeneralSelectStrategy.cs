@@ -10,7 +10,7 @@ namespace Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys
 
         public IEnumerable<IDisplayableFilter> GetStrategyFilters()
         {
-            var strat = new CustomDisplayFilter(Catalog.Instance.ViewModelGenerals.Where(g => !g.IsNetural).Cast<IDisplayadble>().ToList());
+            var strat = new CustomDisplayFilter(Catalog.Instance.Generals.Where(g => !g.IsNetural).Cast<IDisplayadble>().ToList());
             return new[] {strat};
         }
     }

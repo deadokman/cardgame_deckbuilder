@@ -290,7 +290,7 @@
                     <TextBlock HorizontalAlignment="Left" Background="Transparent" FontSize="12" FontWeight="ExtraLight" Text="{Binding CardInDeck}" />
                 </DockPanel>
                 <DockPanel Margin="4" Grid.Row="5" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}">
-                    <Button Content="СОХРАНИТЬ"></Button>
+                    <Button Command="{Binding SaveSquadCmd}" Content="СОХРАНИТЬ"></Button>
                     <Button Content="ОТМЕНА"></Button>
                 </DockPanel>
             </Grid>

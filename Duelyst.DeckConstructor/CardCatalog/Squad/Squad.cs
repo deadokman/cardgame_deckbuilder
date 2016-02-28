@@ -47,7 +47,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
             get
             {
                 var cci = CardCountingCollection.Select(pair => new DtoCardCountInfo(pair.Key, pair.Value)).ToList();
-                return new SquadDto()
+                return new SquadDto
                 {
                     CardCountInfo = cci,
                     GeneralId = CardGeneralId,

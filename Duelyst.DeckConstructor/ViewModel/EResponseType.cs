@@ -5,6 +5,7 @@
         None,
         SquadLimit,
         CardInstanceLimit,
+        SquadSaveUnavaileble,
         OwnerError
     }
 }

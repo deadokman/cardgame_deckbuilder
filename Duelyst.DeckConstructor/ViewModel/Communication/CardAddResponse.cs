@@ -11,6 +11,7 @@ namespace Duelyst.DeckConstructor.ViewModel.Communication
             _respinonses.Add(EResponseType.CardInstanceLimit, "Достигнуто максимальное число карт этого типа в колоде");
             _respinonses.Add(EResponseType.SquadLimit, "Достигнут лимит колоды");
             _respinonses.Add(EResponseType.OwnerError, "Карта не может принадлежать выбранному генералу");
+            _respinonses.Add(EResponseType.SquadSaveUnavaileble, "Не возможно сохранить отряд из-за недостаточного числа карт");
             _respinonses.Add(EResponseType.None, "");
         }
 

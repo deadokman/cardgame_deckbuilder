@@ -19,7 +19,7 @@ namespace Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys
 
         public IEnumerable<IDisplayableFilter> GetStrategyFilters()
         {
-            var generals = Catalog.Instance.ViewModelGenerals.Where(g => g.IsNetural || g.Equals(_general));
+            var generals = Catalog.Instance.Generals.Where(g => g.IsNetural || g.Equals(_general));
             return generals;
         }
     }

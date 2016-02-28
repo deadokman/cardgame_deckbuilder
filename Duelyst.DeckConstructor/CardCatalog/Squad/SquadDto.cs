@@ -17,7 +17,7 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         [DataMember]
         public List<DtoCardCountInfo> CardCountInfo { get; set; }
 
-        [XmlElement]
+        [XmlAttribute]
         [DataMember]
         public string GeneralId { get; set; }
 
