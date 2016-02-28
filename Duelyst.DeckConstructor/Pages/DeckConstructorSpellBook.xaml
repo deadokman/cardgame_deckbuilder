@@ -289,8 +289,8 @@
                     <Label HorizontalAlignment="Right" BorderThickness="0" BorderBrush="Transparent" FontSize="12" FontWeight="ExtraLight"  Content="КАРТ ДОБАВЛЕНО: "/>
                     <TextBlock HorizontalAlignment="Left" Background="Transparent" FontSize="12" FontWeight="ExtraLight" Text="{Binding CardInDeck}" />
                 </DockPanel>
-                <DockPanel Grid.Row="5" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}">
-                    <Button Content="СОХРАНИТЬ"></Button>
+                <DockPanel Margin="4" Grid.Row="5" Visibility="{Binding SquadBuilderMode, Converter={StaticResource btvConverter}}">
+                    <Button Command="{Binding SaveSquadCmd}" Content="СОХРАНИТЬ"></Button>
                     <Button Content="ОТМЕНА"></Button>
                 </DockPanel>
             </Grid>

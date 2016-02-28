@@ -11,6 +11,7 @@ using Duelyst.DeckConstructor.ViewModel.Ifaces.CardDisplayObjects.Strategys;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using static System.String;
 
 namespace Duelyst.DeckConstructor.ViewModel
 {
@@ -18,28 +19,60 @@ namespace Duelyst.DeckConstructor.ViewModel
     {
         private Dictionary<ESquadBuilderModeType, IDisplayStrategy> Strategys; 
 
-
         public SquadManagerViewModel()
         {
+            _squadManager = SquadManager.Instance;
             CardListItems = new ObservableCollection<ListItemViewModelBase>();
             CardCollectionMode = true;
             NewSquadCommand = new RelayCommand(EnterSquadBuilderMode);
             MakePicture = new RelayCommand(OnMakePicture);
+            SaveSquadCmd = new RelayCommand(OnSaveSquadClick);
             MessengerInstance.Register(this, (CardClickMessage m) => ReciveCardClick(m));
-            _squadManager = SquadManager.Instance;
             Strategys = new Dictionary<ESquadBuilderModeType, IDisplayStrategy>();
             Strategys.Add(ESquadBuilderModeType.CollectionMode, new CollectionDisplayStrategy());
             Strategys.Add(ESquadBuilderModeType.GeneralSelectMode, new GeneralSelectStrategy());
-            _currentBuildMode = ESquadBuilderModeType.CollectionMode;
             CardItemClickCmd = new RelayCommand<CardItemViewModelBase>(OnCardItemClick);
-            MessengerInstance.Send(Strategys[_currentBuildMode]);
+            MessengerInstance.Send(Strategys[ESquadBuilderModeType.CollectionMode]);
         }
 
-        private void OnCardItemClick(CardItemViewModelBase cardItemViewModelBase)
+        private void OnSaveSquadClick()
         {
-            if (_сurrentBuildingSquad != null)
+            if (_сurrentBuildingSquad.CardsInSquad == SquadManager.MaxCardCount)
             {
-                _сurrentBuildingSquad.TryRemoveCard(cardItemViewModelBase);
+                SquadManager.Instance.StoreSquadToDefaultLocation(_сurrentBuildingSquad);
+                CardCollectionMode = true;
+                CardListItems = new ObservableCollection<ListItemViewModelBase>(_squadManager.Squads);
+                MessengerInstance.Send(Strategys[ESquadBuilderModeType.CollectionMode]);
+            }
+            else
+            {
+                var commMsg = new CommunicationMessage(CommEventType.CardAddResponseMessage);
+                commMsg.CardAddResponse = new CardAddResponse
+                {
+                    ResponseType = EResponseType.SquadSaveUnavaileble
+                };
+                Messenger.Default.Send(commMsg);
+            }
+        }
+
+        private void OnCardItemClick(ListItemViewModelBase listItem)
+        {
+            if (SquadBuilderMode)
+            {
+                var cardItemVm = listItem as CardItemViewModelBase;
+                if (_сurrentBuildingSquad != null)
+                {
+                    _сurrentBuildingSquad.TryRemoveCard(cardItemVm);
+                }
+            }
+            else
+            {
+                var squad = listItem as Squad;
+                if (squad != null)
+                {
+                    _сurrentBuildingSquad = squad;
+                    InitNewSquadEnvirement(squad);
+                }
             }
         }
 
@@ -66,8 +99,8 @@ namespace Duelyst.DeckConstructor.ViewModel
             {
                 var str = "{0}\\{1}";
                 return _сurrentBuildingSquad == null
-                    ? String.Format(str, 0, SquadManager.MaxCardCount)
-                    : String.Format(str, _сurrentBuildingSquad.CardsInSquad, SquadManager.MaxCardCount);
+                    ? Format(str, 0, SquadManager.MaxCardCount)
+                    : Format(str, _сurrentBuildingSquad.CardsInSquad, SquadManager.MaxCardCount);
             }
         }
 
@@ -91,17 +124,30 @@ namespace Duelyst.DeckConstructor.ViewModel
         /// </summary>
         public ICommand MakePicture { get; set; }
 
-        private ESquadBuilderModeType _currentBuildMode;
-
         /// <summary>
         /// Обработчик клика на элемент в списке
         /// </summary>
         public ICommand CardItemClickCmd { get; set; }
 
+        /// <summary>
+        /// Обработка нажатия на кнопку сохранения отряда
+        /// </summary>
+        public ICommand SaveSquadCmd { get; set; }
+
         private void EnterSquadBuilderMode()
         {
             CardCollectionMode = false;
             MessengerInstance.Send(Strategys[ESquadBuilderModeType.GeneralSelectMode]);
+        }
+
+        private void InitNewSquadEnvirement(Squad squad)
+        {
+            _сurrentBuildingSquad = squad;
+            CardListItems = _сurrentBuildingSquad.SquadCardsList;
+            //Необходимость действий со справочником сомнительна. Сделано для единообразия
+            Strategys[ESquadBuilderModeType.SquadBuildMode] = new GeneralSuadStrategy(squad.SquadOwner);
+            MessengerInstance.Send(Strategys[ESquadBuilderModeType.SquadBuildMode]);
+            CardCollectionMode = false;
         }
 
         public void ReciveCardClick(CardClickMessage message)
@@ -115,14 +161,10 @@ namespace Duelyst.DeckConstructor.ViewModel
                 var general = card as CardGeneral;
                 if (general != null)
                 {
-                    _сurrentBuildingSquad = _squadManager.InitNewSquad(general);
-                    CardListItems = _сurrentBuildingSquad.SquadCardsList;
-                    _currentBuildMode = ESquadBuilderModeType.SquadBuildMode;
-                    //Необходимость действий со справочником сомнительна. Сделано для единообразия
-                    Strategys[_currentBuildMode] = new GeneralSuadStrategy(general);
-                    _сurrentBuildingSquad.SquadCardsList.Add(general);
-                    CurrentSquadName = String.Format("Отряд {0}", general.Name);
-                    MessengerInstance.Send(Strategys[_currentBuildMode]);
+                    var squad = _squadManager.InitNewSquad(general);
+                    squad.SquadName = Format("Отряд {0}", general.Name);
+                    squad.SquadCardsList.Add(general);
+                    InitNewSquadEnvirement(squad);
                     return;
                 }
 

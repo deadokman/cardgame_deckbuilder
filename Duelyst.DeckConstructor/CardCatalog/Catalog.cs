@@ -44,7 +44,7 @@ namespace Duelyst.DeckConstructor.CardCatalog
 
         #endregion
 
-        public CardGeneral[] ViewModelGenerals { get { return _viewModelGeneralsDict.Select(i => i.Value).ToArray(); } }
+        public CardGeneral[] Generals { get { return _viewModelGeneralsDict.Select(i => i.Value).ToArray(); } }
 
         /// <summary>
         /// Список доступных генералов

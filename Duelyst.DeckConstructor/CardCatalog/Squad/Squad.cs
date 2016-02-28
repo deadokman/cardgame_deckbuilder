@@ -10,7 +10,6 @@ using Duelyst.DeckConstructor.ViewModel.DeckCardItem;
 
 namespace Duelyst.DeckConstructor.CardCatalog.Squad
 {
-    [Serializable]
     public class Squad : ListItemViewModelBase
     {
         public Squad()
@@ -20,7 +19,6 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
             SquadCardsList = new ObservableCollection<ListItemViewModelBase>();
         }
 
-        [XmlIgnore]
         public int CardsInSquad
         {
             get { return SquadCardsList.Count; }
@@ -29,8 +27,6 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         /// <summary>
         /// Имя отряда
         /// </summary>
-        [XmlAttribute]
-        [DataMember]
         public string SquadName
         {
             get
@@ -44,48 +40,44 @@ namespace Duelyst.DeckConstructor.CardCatalog.Squad
         }
 
         /// <summary>
-        /// Идентификаторы карт отряда и их количество
+        /// DTO объект отряда
         /// </summary>
-        [XmlElement]
-        [DataMember]
-        public KeyValuePair<string, int>[] CardSquadCountData
+        public SquadDto SquadDto
         {
-            get { return CardCountingCollection.Select(p => p).ToArray(); }
-            set
+            get
             {
-                CardCountingCollection = value.ToDictionary(p => p.Key, p => p.Value);
+                var cci = CardCountingCollection.Select(pair => new DtoCardCountInfo(pair.Key, pair.Value)).ToList();
+                return new SquadDto
+                {
+                    CardCountInfo = cci,
+                    GeneralId = CardGeneralId,
+                    SquadName = SquadName
+                };
             }
         }
 
-        [XmlElement]
-        [DataMember]
         public string CardGeneralId { get; set; }
 
         /// <summary>
         /// Флаг того, что данный отряд сломан
         /// </summary>
-        [XmlIgnore]
         public bool IsBroken { get; private set; }
 
-        [XmlIgnore]
         public Dictionary<string, int> CardCountingCollection { get; set; }
 
         /// <summary>
         /// Ошибки связанные с потстроением отряда
         /// </summary>
-        [XmlIgnore]
         public List<SquadBuildError> SquadErrors { get; private set; } 
 
         /// <summary>
         /// Владелец отряда
         /// </summary>
-        [XmlIgnore]
         public CardGeneral SquadOwner { get; set; }
 
         /// <summary>
         /// Карты входяие в отряд
         /// </summary>
-        [XmlIgnore]
         public ObservableCollection<ListItemViewModelBase> SquadCardsList { get; set; }
 
         public CardItemViewModelBase[] SquadCards
